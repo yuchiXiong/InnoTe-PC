@@ -21,7 +21,6 @@ const Editor = (props: IEditorProps) => {
     if (!articleRef.current) return;
     if (!containerRef) return;
 
-    console.log('init editor')
     new Vditor(articleRef.current, {
       cache: {
         enable: false,
@@ -35,29 +34,16 @@ const Editor = (props: IEditorProps) => {
         }
       },
       preview: {
-        transform: (html: string): string => {
-
-          // 找到所有的图片标签，使用convertFileSrc转换为可访问的本地路径
-          const imgReg = /<img.*?(?:>|\/>)/gi;
-          const srcReg = /src=[\'\"]?([^\'\"]*)[\'\"]?/i;
-          const arr = html.match(imgReg);
-          if (arr) {
-            for (let i = 0; i < arr.length; i++) {
-              const src = arr[i].match(srcReg);
-              if (src && src[1]) {
-                const fileStartIndex = file.path.lastIndexOf('\\');
-                const rootPath = file.path.replace(/[^\/]*$/, '').substring(fileStartIndex + 1);
-                const localPath = "D:\\code\\wolai_export\\" + rootPath + src[1].replace(/\//g, "\\");
-                html = html.replace(src[1], convertFileSrc(localPath));
-              }
-            }
-          }
-
-          return html;
-        }
+        actions: [],
+        markdown: {
+          linkPrefix: 'https://asset.localhost/' + encodeURIComponent('D:\\code\\wolai_export\\markdown\\'),
+        },
       }
+
     });
+
   }, []);
+
 
   return (
     <div className='box-border flex flex-col w-full h-screen overflow-auto' ref={containerRef}>
