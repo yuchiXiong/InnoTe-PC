@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import { IDirectory } from '@/services/directory';
 import { Notes, FolderClose, FolderOpen } from '@icon-park/react';
+import { showTitle } from '@/utils';
 
 interface IDirectoryProps {
   dir: IDirectory,
-  level: number
+  handleItemClick: (item: IDirectory) => void,
+  level?: number
 }
 
 const Directory = (props: IDirectoryProps) => {
@@ -30,19 +32,14 @@ const Directory = (props: IDirectoryProps) => {
       : <FolderClose theme="filled" size="16" fill="#999" />;
   };
 
-  /** 渲染标题 */
-  const showTitle = (title: string) => {
-    return title.endsWith('.md') ? title.slice(0, -3) : title;
-  };
-
   const handleItemClick = (item: IDirectory) => {
-    if (isDir(dir)) {
+    if (isDir(item)) {
       setExtendRecord({
         ...extendRecord,
         [item.path]: !extendRecord[item.path]
       });
     } else {
-      // todo
+      props.handleItemClick(item);
     }
   };
 
@@ -60,7 +57,11 @@ const Directory = (props: IDirectoryProps) => {
           </li>
           {isExtend(child) && isDir(child) && (
             <section className='pl-4'>
-              <Directory dir={child} level={level + 1} />
+              <Directory
+                dir={child}
+                level={level + 1}
+                handleItemClick={handleItemClick}
+              />
             </section>
           )}
         </>
