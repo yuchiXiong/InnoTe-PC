@@ -46,10 +46,9 @@ const Directory = (props: IDirectoryProps) => {
   return (
     <ul className='flex flex-col select-none'>
       {(dir.children || []).map((child) => (
-        <>
+        <React.Fragment key={child.path}>
           <li
             className={`flex items-center w-full px-4 py-2 from-zinc-200 backdrop-blur-2xl ${isRoot(child) && isExtend(child) && 'border-b border-dashed border-gray-400'}`}
-            key={child.path}
             onClick={() => handleItemClick(child)}
           >
             {showIcon(child)}
@@ -64,7 +63,7 @@ const Directory = (props: IDirectoryProps) => {
               />
             </section>
           )}
-        </>
+        </React.Fragment>
       ))}
     </ul >
   )
