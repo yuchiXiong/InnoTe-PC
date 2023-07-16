@@ -1,5 +1,4 @@
 import { IDirectory } from '@/services/directory';
-import { convertFileSrc } from '@tauri-apps/api/tauri';
 import { showTitle } from '@/utils';
 import React, { useEffect, useRef } from 'react';
 import Vditor from 'vditor';
@@ -21,22 +20,17 @@ const Editor = (props: IEditorProps) => {
     if (!articleRef.current) return;
     if (!containerRef) return;
 
+    const fileDir = file.path.split('\\').slice(0, -1).join('\\') + '\\';
+
     new Vditor(articleRef.current, {
       cache: {
         enable: false,
       },
       value: file.content,
-      image: {
-        isPreview: true,
-        preview: (bom: Element): void => {
-          console.log('preview')
-          console.log(bom);
-        }
-      },
       preview: {
         actions: [],
         markdown: {
-          linkPrefix: 'https://asset.localhost/' + encodeURIComponent('D:\\code\\wolai_export\\markdown\\'),
+          linkPrefix: 'https://asset.localhost/' + encodeURIComponent(fileDir.replace(/\\/g, '/')),
         },
       }
 

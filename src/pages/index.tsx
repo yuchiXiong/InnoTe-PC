@@ -2,13 +2,13 @@ import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import { useEffect, useState } from 'react'
 import type { IDirectory } from '@/services/directory';
-import Directory from './components/Directory';
-import { TEditorFile } from './components/Editor';
+import Directory from '../components/Directory';
+import { TEditorFile } from '../components/Editor';
 import { getDirectoryContent } from '@/actions/file';
 import { open } from "@tauri-apps/api/dialog"
 import { FolderOpen } from '@icon-park/react';
 import { LAST_FOLDER_PATH } from "@/constants";
-import Preview from "@/pages/components/Perview";
+import Preview from "@/components/Preview";
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -36,17 +36,17 @@ export default function Home() {
     if (isDirectory) {
       getDirectoryContent(item.path).then((files) => {
         item.children = files.map(file => {
-            const obj = {
-              name: file.name,
-              path: file.path,
-              children: file.isDirectory ? [] : undefined
-            }
-
-            if (!file.isDirectory) {
-              delete obj.children;
-            }
-            return obj;
+          const obj = {
+            name: file.name,
+            path: file.path,
+            children: file.isDirectory ? [] : undefined
           }
+
+          if (!file.isDirectory) {
+            delete obj.children;
+          }
+          return obj;
+        }
         );
         setDirs({ ...dir });
       });
@@ -105,7 +105,7 @@ export default function Home() {
             className='h-8 ml-auto text-gray-500'
             onClick={handleOpenDirectory}
           >
-            <FolderOpen className='' theme="filled" size="18" fill="#666"/>
+            <FolderOpen className='' theme="filled" size="18" fill="#666" />
           </button>
         </div>
         {(dir.children?.length || 0) > 0 ? (
@@ -123,7 +123,7 @@ export default function Home() {
         className={`w-10/12 flex h-screen flex-col items-center justify-between ${inter.className}`}
       >
         {file.path ? (
-          <Preview file={file} key={file.path}/>
+          <Preview file={file} key={file.path} />
         ) : (
           <>
             <div

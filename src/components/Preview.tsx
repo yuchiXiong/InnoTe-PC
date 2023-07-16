@@ -1,5 +1,5 @@
 import React, { ReactElement, useRef } from 'react'
-import Editor, { TEditorFile } from "@/pages/components/Editor";
+import Editor, { TEditorFile } from "@/components/Editor";
 import { convertFileSrc } from "@tauri-apps/api/tauri";
 import { getFileContent } from "@/actions/file";
 
@@ -26,12 +26,12 @@ const Preview = (props: IDirectoryProps) => {
     case 'webp':
     case 'jpeg':
       viewRef.current = (<div className='h-full w-full flex justify-center items-center p-8 box-border overflow-auto'>
-        <img className='max-h-full shadow-2xl' src={src} alt={file.name}/>
+        <img className='max-h-full shadow-2xl' src={src} alt={file.name} />
       </div>);
       break;
     case 'md':
       getFileContent(file.path).then((res) => {
-        viewRef.current = (<Editor file={{ ...file, content: res }} key={file.path}/>);
+        viewRef.current = (<Editor file={{ ...file, content: res }} key={file.path} />);
         forceUpdate(_ + 1);
       });
       break;
