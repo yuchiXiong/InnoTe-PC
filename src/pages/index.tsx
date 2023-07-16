@@ -3,11 +3,12 @@ import { Inter } from 'next/font/google'
 import { useEffect, useState } from 'react'
 import type { IDirectory } from '@/services/directory';
 import Directory from './components/Directory';
-import Editor, { TEditorFile } from './components/Editor';
-import { getDirectoryContent, getFileContent } from '@/actions/file';
+import { TEditorFile } from './components/Editor';
+import { getDirectoryContent } from '@/actions/file';
 import { open } from "@tauri-apps/api/dialog"
 import { FolderOpen } from '@icon-park/react';
 import { LAST_FOLDER_PATH } from "@/constants";
+import Preview from "@/pages/components/Perview";
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -30,6 +31,7 @@ export default function Home() {
     if (lastFolderPath) fetchRootDirectory(lastFolderPath);
   }, []);
 
+  /** 点击文件夹或文件 */
   const handleItemClick = (item: IDirectory, isDirectory: boolean) => {
     if (isDirectory) {
       getDirectoryContent(item.path).then((files) => {
@@ -49,16 +51,15 @@ export default function Home() {
         setDirs({ ...dir });
       });
     } else {
-      getFileContent(item.path).then((res) => {
-        setFile({
-          name: item.name,
-          path: item.path,
-          content: res
-        });
+      setFile({
+        name: item.name,
+        path: item.path,
+        content: ''
       });
     }
   }
 
+  /** 打开文件夹 */
   const handleOpenDirectory = () => {
     open({
       directory: true,
@@ -72,6 +73,7 @@ export default function Home() {
     });
   }
 
+  /** 获取根目录下的文件列表 */
   const fetchRootDirectory = (path: string) => {
     getDirectoryContent(path as string).then((files) => {
       const rootPathName = (path as string).split('\\').pop() || '';
@@ -118,10 +120,10 @@ export default function Home() {
         )}
       </nav>
       <section
-        className={`w-10/12 flex min-h-screen flex-col items-center justify-between ${inter.className}`}
+        className={`w-10/12 flex h-screen flex-col items-center justify-between ${inter.className}`}
       >
         {file.path ? (
-          <Editor file={file} key={file.path}/>
+          <Preview file={file} key={file.path}/>
         ) : (
           <>
             <div
