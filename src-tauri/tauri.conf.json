@@ -18,6 +18,10 @@
         "assetScope": [
           "**/*"
         ]
+      },
+      "dialog": {
+        "all": false,
+        "open": true
       }
     },
     "bundle": {

@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { IDirectory } from '@/services/directory';
-import { Notes, FolderClose, FolderOpen } from '@icon-park/react';
+import { FolderClose, FolderOpen, Notes } from '@icon-park/react';
 import { showTitle } from '@/utils';
 
 interface IDirectoryProps {
   dir: IDirectory,
-  handleItemClick: (item: IDirectory) => void,
+  handleItemClick: (item: IDirectory, isDirectory: boolean) => void,
   level?: number
 }
 
@@ -15,13 +15,13 @@ const Directory = (props: IDirectoryProps) => {
   const [extendRecord, setExtendRecord] = useState<Record<string, boolean>>({});
 
   /** 是目录 */
-  const isDir = (dir: IDirectory) => dir.children && dir.children.length > 0;
+  const isDir = (dir: IDirectory): boolean => 'children' in dir;
 
   /** 是根目录 */
-  const isRoot = (dir: IDirectory) => level === 1 && isDir(dir);
+  const isRoot = (dir: IDirectory): boolean => level === 1 && isDir(dir);
 
   /** 是否展开 */
-  const isExtend = (dir: IDirectory) => extendRecord[dir.path];
+  const isExtend = (dir: IDirectory): boolean => extendRecord[dir.path];
 
   /** 渲染图标 */
   const showIcon = (item: IDirectory) => {
@@ -33,13 +33,12 @@ const Directory = (props: IDirectoryProps) => {
   };
 
   const handleItemClick = (item: IDirectory) => {
+    props.handleItemClick(item, isDir(item));
     if (isDir(item)) {
       setExtendRecord({
         ...extendRecord,
         [item.path]: !extendRecord[item.path]
       });
-    } else {
-      props.handleItemClick(item);
     }
   };
 
