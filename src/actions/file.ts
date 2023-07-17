@@ -24,7 +24,12 @@ const getDirectoryContent = (path: string): Promise<IDirectoryContent[]> => {
   })
 }
 
+const writeFile = (path: string, content: string): Promise<void> => {
+  return invoke<void>('write_string_to_file', { path, content });
+}
+
 export {
   getFileContent,
-  getDirectoryContent
+  getDirectoryContent,
+  writeFile
 }

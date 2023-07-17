@@ -68,13 +68,20 @@ fn get_content_by_filepath(path: PathBuf) -> String {
   fs::read_to_string(path).unwrap()
 }
 
+#[tauri::command]
+fn write_string_to_file(path: PathBuf, content: String) {
+  println!("[Native Call][保存内容到文件]{:?}", path);
+  fs::write(path, content).unwrap()
+}
+
 fn main() {
   tauri::Builder::default()
-    .invoke_handler(tauri::generate_handler![
+      .invoke_handler(tauri::generate_handler![
             greet,
             get_content_by_filepath,
+            write_string_to_file,
             get_directory_by_path
         ])
-    .run(tauri::generate_context!())
+      .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }

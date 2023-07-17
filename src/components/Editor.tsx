@@ -3,6 +3,7 @@ import { showTitle } from '@/utils';
 import React, { useEffect, useRef } from 'react';
 import Vditor from 'vditor';
 import "vditor/dist/index.css";
+import { writeFile } from "@/actions/file";
 
 export type TEditorFile = Exclude<IDirectory, 'name'> & { content: string }
 
@@ -27,6 +28,9 @@ const Editor = (props: IEditorProps) => {
         enable: false,
       },
       value: file.content,
+      input: (value: string) => {
+        writeFile(file.path, value);
+      },
       preview: {
         actions: [],
         markdown: {
@@ -42,7 +46,7 @@ const Editor = (props: IEditorProps) => {
   return (
     <div className='box-border flex flex-col w-full h-screen overflow-auto' ref={containerRef}>
       <h4 className='py-2 mx-4 text-3xl font-medium '>{showTitle(file.name)}</h4>
-      <article className='flex-1' ref={articleRef} />
+      <article className='flex-1' ref={articleRef}/>
     </div>
   )
 }
