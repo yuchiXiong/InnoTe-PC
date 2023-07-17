@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react'
 import type { IDirectory } from '@/services/directory';
 import Directory from '../components/Directory';
 import { TEditorFile } from '../components/Editor';
-import { getDirectoryContent } from '@/actions/file';
+import { createFile, getDirectoryContent } from '@/actions/file';
 import { open } from "@tauri-apps/api/dialog"
-import { FolderOpen } from '@icon-park/react';
+import { FileAddition, FolderOpen } from '@icon-park/react';
 import { LAST_FOLDER_PATH } from "@/constants";
 import Preview from "@/components/Preview";
 
@@ -24,6 +24,8 @@ export default function Home() {
     path: '',
     content: ''
   });
+  // 当前选中的文件夹路径
+  const [currentSelectedPath, setCurrentSelectedPath] = useState<string>('');
 
   useEffect(() => {
     const lastFolderPath = localStorage.getItem(LAST_FOLDER_PATH);
@@ -33,20 +35,21 @@ export default function Home() {
 
   /** 点击文件夹或文件 */
   const handleItemClick = (item: IDirectory, isDirectory: boolean) => {
+    setCurrentSelectedPath(item.path);
     if (isDirectory) {
       getDirectoryContent(item.path).then((files) => {
         item.children = files.map(file => {
-          const obj = {
-            name: file.name,
-            path: file.path,
-            children: file.isDirectory ? [] : undefined
-          }
+            const obj = {
+              name: file.name,
+              path: file.path,
+              children: file.isDirectory ? [] : undefined
+            }
 
-          if (!file.isDirectory) {
-            delete obj.children;
+            if (!file.isDirectory) {
+              delete obj.children;
+            }
+            return obj;
           }
-          return obj;
-        }
         );
         setDirs({ ...dir });
       });
@@ -73,6 +76,42 @@ export default function Home() {
     });
   }
 
+  const handleCreateFile = () => {
+    let dirPath = '';
+    if (file.path === currentSelectedPath) {
+      const lastSlashIndex = file.path.lastIndexOf('\\');
+      dirPath = file.path.substring(0, lastSlashIndex);
+    } else {
+      dirPath = currentSelectedPath;
+    }
+    createFile(dirPath).then(() => {
+      const pathArr = dirPath.replace(dir.path, '').split('\\');
+      pathArr.shift();
+      let currentDir = dir;
+      do {
+        const left = pathArr.shift();
+        currentDir = (currentDir.children as IDirectory[]).find(item => item.name === left) as IDirectory
+      } while ((pathArr.length > 0));
+
+      getDirectoryContent(dirPath).then((files) => {
+        currentDir.children = files.map(file => {
+            const obj = {
+              name: file.name,
+              path: file.path,
+              children: file.isDirectory ? [] : undefined
+            }
+
+            if (!file.isDirectory) {
+              delete obj.children;
+            }
+            return obj;
+          }
+        );
+        setDirs({ ...dir });
+      });
+    });
+  }
+
   /** 获取根目录下的文件列表 */
   const fetchRootDirectory = (path: string) => {
     getDirectoryContent(path as string).then((files) => {
@@ -93,6 +132,7 @@ export default function Home() {
           return obj;
         })
       });
+      setCurrentSelectedPath(path as string);
     });
   }
 
@@ -101,11 +141,18 @@ export default function Home() {
       <nav className='w-2/12 max-h-screen overflow-auto border'>
         <div className='flex items-center h-8 p-2 border-b'>
           <button
-            title='打开文件夹'
+            title='创建文件'
             className='h-8 ml-auto text-gray-500'
+            onClick={handleCreateFile}
+          >
+            <FileAddition theme="filled" size="18" fill="#666"/>
+          </button>
+          <button
+            title='打开文件夹'
+            className='h-8 ml-2 text-gray-500'
             onClick={handleOpenDirectory}
           >
-            <FolderOpen className='' theme="filled" size="18" fill="#666" />
+            <FolderOpen className='' theme="filled" size="18" fill="#666"/>
           </button>
         </div>
         {(dir.children?.length || 0) > 0 ? (
@@ -123,7 +170,7 @@ export default function Home() {
         className={`w-10/12 flex h-screen flex-col items-center justify-between ${inter.className}`}
       >
         {file.path ? (
-          <Preview file={file} key={file.path} />
+          <Preview file={file} key={file.path}/>
         ) : (
           <>
             <div

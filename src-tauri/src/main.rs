@@ -51,7 +51,8 @@ fn get_directory_by_path(path: &str) -> Vec<FileInfo> {
 
         let is_directory = file_path.is_dir();
 
-        let absolute_path = file_path.canonicalize().unwrap_or(file_path);
+        let absolute_path = file_path.clone();
+        // let absolute_path = file_path.canonicalize().unwrap_or(file_path.clone());
 
         let file_info = FileInfo::new(name, is_directory, absolute_path);
         file_info_list.push(file_info);
@@ -74,14 +75,30 @@ fn write_string_to_file(path: PathBuf, content: String) {
   fs::write(path, content).unwrap()
 }
 
+#[tauri::command]
+fn create_markdown_file_to_path(path: PathBuf) {
+  println!("[Native Call][create_markdown_file_to_path]{:?}", path.to_str());
+  // 默认文件名为 untitled.md 存在则自动加上数字后缀
+  let mut file_name = String::from("untitled.md");
+  let mut file_path = path.clone().join(file_name.clone());
+  let mut index = 0;
+  while file_path.exists() {
+    index += 1;
+    file_name = format!("untitled{}.md", index);
+    file_path = path.join(file_name.clone());
+  }
+  fs::write(file_path, "").unwrap();
+}
+
 fn main() {
   tauri::Builder::default()
-      .invoke_handler(tauri::generate_handler![
+    .invoke_handler(tauri::generate_handler![
             greet,
             get_content_by_filepath,
             write_string_to_file,
-            get_directory_by_path
+            get_directory_by_path,
+            create_markdown_file_to_path,
         ])
-      .run(tauri::generate_context!())
+    .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }

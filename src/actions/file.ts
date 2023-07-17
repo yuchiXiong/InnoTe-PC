@@ -28,8 +28,13 @@ const writeFile = (path: string, content: string): Promise<void> => {
   return invoke<void>('write_string_to_file', { path, content });
 }
 
+const createFile = (path: string): Promise<void> => {
+  return invoke<void>('create_markdown_file_to_path', { path });
+}
+
 export {
   getFileContent,
   getDirectoryContent,
-  writeFile
+  writeFile,
+  createFile
 }
