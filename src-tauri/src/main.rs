@@ -1,10 +1,11 @@
+// Prevents additional console window on Windows in release, DO NOT REMOVE!!
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 use std::fs;
 use std::path::{Path, PathBuf};
 
 use serde::Serialize;
 
-// Prevents additional console window on Windows in release, DO NOT REMOVE!!
-#[cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+
 #[tauri::command]
 fn greet(name: &str) -> String {
   println!("[Native Call][greet]{:?}", name);
