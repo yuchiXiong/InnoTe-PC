@@ -25,3 +25,6 @@
     @apply mx-auto;
 }
 
+.editor:focus-visible {
+    @apply outline-none;
+}
