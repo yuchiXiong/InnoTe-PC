@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google'
 import { useEffect, useState } from 'react'
 import type { IDirectory } from '@/services/directory';
 import Directory from '../components/Directory';
-import { TEditorFile } from '../components/Editor';
+import { TEditorFile } from '@/components/NotoEditor';
 import { createFile, getDirectoryContent } from '@/actions/file';
 import { open } from "@tauri-apps/api/dialog"
 import { FileAddition, FolderOpen } from '@icon-park/react';
