@@ -1,7 +1,7 @@
 import React, { ReactElement, useRef } from 'react'
 import { convertFileSrc } from "@tauri-apps/api/tauri";
 import { getFileContent } from "@/actions/file";
-import SlateEditor, { TEditorFile } from "@/components/NotoEditor";
+import NotoEditor, { TEditorFile } from "@/components/NotoEditor";
 
 interface IDirectoryProps {
   file: TEditorFile
@@ -31,7 +31,7 @@ const Preview = (props: IDirectoryProps) => {
       break;
     case 'md':
       getFileContent(file.path).then((res) => {
-        viewRef.current = (<SlateEditor file={{ ...file, content: res }}/>)
+        viewRef.current = (<NotoEditor file={{ ...file, content: res }}/>)
         forceUpdate(_ + 1);
       });
       break;

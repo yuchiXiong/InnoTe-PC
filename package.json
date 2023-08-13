@@ -1,6 +1,6 @@
 {
   "name": "noto",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@icon-park/react": "^1.4.2",
-    "@milkdown/ctx": "^7.2.4",
     "@milkdown/core": "^7.2.4",
+    "@milkdown/ctx": "^7.2.4",
     "@milkdown/plugin-listener": "^7.2.4",
     "@milkdown/preset-commonmark": "^7.2.4",
     "@milkdown/prose": "^7.2.4",

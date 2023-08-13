@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "noto",
-    "version": "0.1.0"
+    "version": "0.1.1"
   },
   "tauri": {
     "allowlist": {
@@ -58,7 +58,7 @@
       }
     },
     "security": {
-      "csp": "default-src 'self'; img-src 'self'; asset: https://asset.localhost"
+      "csp": "default-src 'self'; img-src 'self' asset: https:;"
     },
     "updater": {
       "active": false
