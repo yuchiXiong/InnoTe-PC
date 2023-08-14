@@ -2,13 +2,29 @@ import { defaultValueCtx, Editor, editorViewOptionsCtx, rootCtx } from '@milkdow
 import { listener, listenerCtx } from '@milkdown/plugin-listener';
 import { Milkdown, MilkdownProvider, useEditor } from '@milkdown/react'
 import { commonmark } from '@milkdown/preset-commonmark';
+import { prism, prismConfig } from '@milkdown/plugin-prism';
 import { nord } from '@milkdown/theme-nord';
 import '@milkdown/theme-nord/style.css';
+import 'prism-themes/themes/prism-nord.css'
 import { showTitle } from "@/utils";
 import React from "react";
 import { writeFile } from "@/actions/file";
 import { IDirectory } from "@/services/directory";
 import { convertFileSrc } from "@tauri-apps/api/tauri";
+import markdown from 'refractor/lang/markdown'
+import css from 'refractor/lang/css'
+import javascript from 'refractor/lang/javascript'
+import typescript from 'refractor/lang/typescript'
+import jsx from 'refractor/lang/jsx'
+import tsx from 'refractor/lang/tsx';
+import python from "refractor/lang/python";
+import ruby from "refractor/lang/ruby";
+import java from "refractor/lang/java";
+import php from "refractor/lang/php";
+import go from "refractor/lang/go";
+import kotlin from "refractor/lang/kotlin";
+import c from "refractor/lang/c";
+import rust from "refractor/lang/rust";
 
 export type TEditorFile = Exclude<IDirectory, 'name'> & { content: string }
 
@@ -28,6 +44,33 @@ const MilkdownEditor = (props: IDirectoryProps) => {
 
         ctx.set(rootCtx, root);
         ctx.set(defaultValueCtx, content);
+
+        ctx.set(prismConfig.key, {
+          configureRefractor: (refractor) => {
+            refractor.register(markdown)
+            refractor.register(css)
+
+            // js和ts的别名比较多
+            refractor.register(javascript);
+            refractor.alias({ javascript: ['js', 'JS', 'JavaScript', 'javascript'] });
+
+            refractor.register(typescript);
+            refractor.alias({ typescript: ['ts', 'TS', 'TypeScript', 'typescript'] });
+
+            refractor.register(jsx);
+            refractor.register(tsx);
+
+            // other
+            refractor.register(python);
+            refractor.register(ruby);
+            refractor.register(java);
+            refractor.register(php);
+            refractor.register(go);
+            refractor.register(kotlin);
+            refractor.register(c);
+            refractor.register(rust);
+          }
+        });
 
         // 配置视图渲染规则，在渲染图片时添加域名前缀
         ctx.set(editorViewOptionsCtx, {
@@ -70,14 +113,15 @@ const MilkdownEditor = (props: IDirectoryProps) => {
           }
         });
 
+        // 监听markdown更新事件，更新文件内容
         ctx.get(listenerCtx).markdownUpdated((ctx, markdown) => {
           writeFile(file.path, markdown);
         });
 
-
       })
       .config(nord)
       .use(commonmark)
+      .use(prism)
       .use(listener)
   }, [])
 
