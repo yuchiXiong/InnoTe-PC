@@ -837,7 +837,7 @@ concat-map@0.0.1:
 
 core-js@^3.32.0:
   version "3.32.0"
-  resolved "https://ued.zuoyebang.cc/core-js/-/core-js-3.32.0.tgz#7643d353d899747ab1f8b03d2803b0312a0fb3b6"
+  resolved "https://registry.npmmirror.com/core-js/-/core-js-3.32.0.tgz#7643d353d899747ab1f8b03d2803b0312a0fb3b6"
   integrity sha512-rd4rYZNlF3WuoYuRIDEmbR/ga9CeuWX9U05umAvgrrZoHY4Z++cp/xwPQMvUpBB4Ag6J8KfD80G0zwCyaSxDww==
 
 cross-spawn@^7.0.2, cross-spawn@^7.0.3:
