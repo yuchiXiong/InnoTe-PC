@@ -7,9 +7,10 @@ import { nord } from '@milkdown/theme-nord';
 import '@milkdown/theme-nord/style.css';
 import 'prism-themes/themes/prism-nord.css'
 import { showTitle } from "@/utils";
-import React from "react";
-import { writeFile } from "@/actions/file";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { getFileContent, renameFile, writeFile } from "@/actions/file";
 import { IDirectory } from "@/services/directory";
+import { debounce } from "lodash";
 import { convertFileSrc } from "@tauri-apps/api/tauri";
 import markdown from 'refractor/lang/markdown'
 import css from 'refractor/lang/css'
@@ -29,11 +30,10 @@ import rust from "refractor/lang/rust";
 export type TEditorFile = Exclude<IDirectory, 'name'> & { content: string }
 
 interface IDirectoryProps {
-  file: TEditorFile
+  filePath: string
 }
 
-const MilkdownEditor = (props: IDirectoryProps) => {
-  const { file } = props;
+const MilkdownEditor = ({ file }: { file: TEditorFile }) => {
 
   const content = file.content;
 
@@ -123,20 +123,69 @@ const MilkdownEditor = (props: IDirectoryProps) => {
       .use(commonmark)
       .use(prism)
       .use(listener)
-  }, [])
+  }, [content])
 
   return <Milkdown/>
 }
 
 
 const NotoEditor = (props: IDirectoryProps) => {
-  const { file } = props;
+  const { filePath } = props;
+
+  const [file, setFile] = useState<TEditorFile>({
+    path: '',
+    name: '',
+    content: ''
+  });
+  const inputRef = useRef<HTMLInputElement>(null);
+  // 上一次修改完成之前，不允许再次修改
+  const isEditing = useRef<boolean>(false);
+
+  useEffect(() => {
+    // todo fix it! 开发环境下每次重新渲染这里用的都是旧的filePath，需要完善自顶向下的数据流刷新
+    fetchData(filePath);
+  }, []);
+
+  const fetchData = (filePath: string) => {
+    console.log(filePath)
+    getFileContent(filePath).then(content => {
+      const path = filePath.split('\\');
+      const name = path[path.length - 1];
+      inputRef.current && (inputRef.current.value = showTitle(name));
+      isEditing.current = false;
+      setFile({ path: filePath, name, content });
+    });
+  }
+
+  const handleFileRename = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (isEditing.current) return;
+    const newName = event.target.value.trim();
+    if (newName === '') return;
+    if (newName === file.name) return;
+
+    updateFileName(newName);
+  }
+
+  const updateFileName = useCallback(debounce((newName: string) => {
+    const newPath = file.path.split('\\').slice(0, -1).join('\\') + '\\' + newName + '.md';
+    isEditing.current = true;
+    renameFile(file.path, newPath).then(res => {
+      fetchData(res);
+    })
+  }, 200), [file]);
+
   return (
     <div className='box-border flex flex-col w-full h-screen overflow-auto'>
-      <h4 className='py-2 mx-4 text-3xl font-medium '>{showTitle(file.name)}</h4>
+      <input
+        ref={inputRef}
+        defaultValue={showTitle(file.name)}
+        onChange={handleFileRename}
+        className='py-2 mx-4 text-3xl font-medium focus:outline-0'
+        disabled={isEditing.current}
+      />
       <div className='flex-1 bg-slate-50 border-t overflow-y-scroll'>
         <MilkdownProvider>
-          <MilkdownEditor {...props} />
+          <MilkdownEditor file={file}/>
         </MilkdownProvider>
       </div>
     </div>

@@ -28,6 +28,7 @@
     "core-js": "^3.32.0",
     "eslint": "8.45.0",
     "eslint-config-next": "13.4.10",
+    "lodash": "^4.17.21",
     "next": "13.4.10",
     "postcss": "8.4.26",
     "prism-themes": "^1.9.0",
@@ -37,6 +38,7 @@
     "typescript": "5.1.6"
   },
   "devDependencies": {
-    "@tauri-apps/cli": "^1.4.0"
+    "@tauri-apps/cli": "^1.4.0",
+    "@types/lodash": "^4.14.197"
   }
 }

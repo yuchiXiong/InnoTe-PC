@@ -1,6 +1,5 @@
 import React, { ReactElement, useRef } from 'react'
 import { convertFileSrc } from "@tauri-apps/api/tauri";
-import { getFileContent } from "@/actions/file";
 import NotoEditor, { TEditorFile } from "@/components/NotoEditor";
 
 interface IDirectoryProps {
@@ -30,10 +29,7 @@ const Preview = (props: IDirectoryProps) => {
       </div>);
       break;
     case 'md':
-      getFileContent(file.path).then((res) => {
-        viewRef.current = (<NotoEditor file={{ ...file, content: res }}/>)
-        forceUpdate(_ + 1);
-      });
+      viewRef.current = (<NotoEditor filePath={file.path}/>)
       break;
     default:
       viewRef.current = (<div>暂不支持该文件预览</div>);

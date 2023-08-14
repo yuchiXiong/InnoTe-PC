@@ -32,9 +32,14 @@ const createFile = (path: string): Promise<void> => {
   return invoke<void>('create_markdown_file_to_path', { path });
 }
 
+const renameFile = (oldPath: string, newPath: string): Promise<string> => {
+  return invoke<string>('rename_file_by_path', { oldPath, newPath });
+}
+
 export {
   getFileContent,
   getDirectoryContent,
   writeFile,
-  createFile
+  createFile,
+  renameFile
 }
