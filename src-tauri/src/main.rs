@@ -51,9 +51,7 @@ fn get_directory_by_path(path: &str) -> Vec<FileInfo> {
           .to_string();
 
         let is_directory = file_path.is_dir();
-
         let absolute_path = file_path.clone();
-        // let absolute_path = file_path.canonicalize().unwrap_or(file_path.clone());
 
         let file_info = FileInfo::new(name, is_directory, absolute_path);
         file_info_list.push(file_info);
@@ -115,7 +113,7 @@ fn rename_file_by_path(old_path: PathBuf, new_path: PathBuf) -> PathBuf {
     file_name = format!("{}.{}", file_name, suffix);
     file_path = new_path.parent().unwrap().join(file_name.clone());
   }
-  fs::rename(old_path.clone(), file_path.clone()).unwrap();
+  fs::rename(old_path.clone(), file_path.clone()).expect("rename file error");
   println!(
     "[Native Call][rename_file_by_path] old_path:{:?}, new_path:{:?}",
     old_path, file_path

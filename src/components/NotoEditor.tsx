@@ -8,7 +8,7 @@ import '@milkdown/theme-nord/style.css';
 import 'prism-themes/themes/prism-nord.css'
 import { showTitle } from "@/utils";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { getFileContent, renameFile, writeFile } from "@/actions/file";
+import { getFileContent, writeFile } from "@/actions/file";
 import { IDirectory } from "@/services/directory";
 import { debounce } from "lodash";
 import { convertFileSrc } from "@tauri-apps/api/tauri";
@@ -30,7 +30,8 @@ import rust from "refractor/lang/rust";
 export type TEditorFile = Exclude<IDirectory, 'name'> & { content: string }
 
 interface IDirectoryProps {
-  filePath: string
+  filePath: string,
+  updateFileName: (oldPath: string, newPath: string) => void
 }
 
 const MilkdownEditor = ({ file }: { file: TEditorFile }) => {
@@ -130,7 +131,7 @@ const MilkdownEditor = ({ file }: { file: TEditorFile }) => {
 
 
 const NotoEditor = (props: IDirectoryProps) => {
-  const { filePath } = props;
+  const { filePath, updateFileName } = props;
 
   const [file, setFile] = useState<TEditorFile>({
     path: '',
@@ -141,13 +142,13 @@ const NotoEditor = (props: IDirectoryProps) => {
   // 上一次修改完成之前，不允许再次修改
   const isEditing = useRef<boolean>(false);
 
+  const renameCallback = useCallback(debounce(updateFileName, 450), [updateFileName]);
+
   useEffect(() => {
-    // todo fix it! 开发环境下每次重新渲染这里用的都是旧的filePath，需要完善自顶向下的数据流刷新
     fetchData(filePath);
-  }, []);
+  }, [filePath]);
 
   const fetchData = (filePath: string) => {
-    console.log(filePath)
     getFileContent(filePath).then(content => {
       const path = filePath.split('\\');
       const name = path[path.length - 1];
@@ -163,16 +164,10 @@ const NotoEditor = (props: IDirectoryProps) => {
     if (newName === '') return;
     if (newName === file.name) return;
 
-    updateFileName(newName);
-  }
-
-  const updateFileName = useCallback(debounce((newName: string) => {
     const newPath = file.path.split('\\').slice(0, -1).join('\\') + '\\' + newName + '.md';
-    isEditing.current = true;
-    renameFile(file.path, newPath).then(res => {
-      fetchData(res);
-    })
-  }, 200), [file]);
+
+    renameCallback(file.path, newPath);
+  }
 
   return (
     <div className='box-border flex flex-col w-full h-screen overflow-auto'>

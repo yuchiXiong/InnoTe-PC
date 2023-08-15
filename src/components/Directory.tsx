@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IDirectory } from '@/services/directory';
 import { FolderClose, FolderOpen, Notes } from '@icon-park/react';
 import { showTitle } from '@/utils';
@@ -6,6 +6,7 @@ import { showTitle } from '@/utils';
 interface IDirectoryProps {
   dir: IDirectory,
   handleItemClick: (item: IDirectory, isDirectory: boolean) => void,
+  currentSelectedPath: string,
   level?: number
 }
 
@@ -14,6 +15,16 @@ const Directory = (props: IDirectoryProps) => {
   const { dir, level = 1 } = props;
   const [extendRecord, setExtendRecord] = useState<Record<string, boolean>>({});
   const [current, setCurrent] = useState<IDirectory | null>(null);
+
+  useEffect(() => {
+    const item = dir.children?.find(item => item.path === props.currentSelectedPath);
+    if (item) {
+      isDir(item) ? setExtendRecord({
+        ...extendRecord,
+        [item.path]: true
+      }) : setCurrent(item);
+    }
+  }, [props.currentSelectedPath]);
 
   /** 是目录 */
   const isDir = (dir: IDirectory): boolean => 'children' in dir;
@@ -66,6 +77,7 @@ const Directory = (props: IDirectoryProps) => {
             <section className='pl-4'>
               <Directory
                 dir={child}
+                currentSelectedPath={props.currentSelectedPath}
                 level={level + 1}
                 handleItemClick={handleItemClick}
               />
