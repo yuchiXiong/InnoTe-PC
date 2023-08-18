@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import type { IDirectory } from '@/services/directory';
 import Directory from '../components/Directory';
 import { TEditorFile } from '@/components/NotoEditor';
-import { createFile, getDirectoryContent } from '@/actions/file';
+import { createFile, getDirectoryContent, renameFile } from '@/actions/file';
 import { open } from "@tauri-apps/api/dialog"
 import { FileAddition, FolderOpen } from '@icon-park/react';
 import { LAST_FOLDER_PATH } from "@/constants";
@@ -24,6 +24,7 @@ export default function Home() {
     path: '',
     content: ''
   });
+
   // 当前选中的文件夹路径
   const [currentSelectedPath, setCurrentSelectedPath] = useState<string>('');
 
@@ -112,6 +113,50 @@ export default function Home() {
     });
   }
 
+  /** 重命名文件 */
+  const updateFileName = (oldPath: string, newPath: string) => {
+    renameFile(oldPath, newPath).then(res => {
+        // 获取修改的文件所在的文件夹绝对路径
+        const dirPath = newPath.split('\\').slice(0, -1).join('\\');
+
+        // 获取这个路径相对于 app 根目录的相对路径
+        const relativePath = dirPath.replace(dir.path, '');
+        // 根据相对路径，找到对应的文件夹对象
+        const pathArr = relativePath.split('\\');
+        pathArr.shift();
+        let currentDir = dir;
+        while (pathArr.length > 0) {
+          const left = pathArr.shift();
+          currentDir = (currentDir.children as IDirectory[]).find(item => item.name === left) as IDirectory
+        }
+
+        getDirectoryContent(dirPath).then((files) => {
+          currentDir.children = files.map(file => {
+              const obj = {
+                name: file.name,
+                path: file.path,
+                children: file.isDirectory ? [] : undefined
+              }
+
+              if (!file.isDirectory) {
+                delete obj.children;
+              }
+              return obj;
+            }
+          );
+          setDirs({ ...dir });
+          // 更新所选文件
+          setFile({
+            name: res.split('\\').pop() || '',
+            path: res,
+            content: ''
+          });
+          setCurrentSelectedPath(res);
+        });
+      }
+    )
+  };
+
   /** 获取根目录下的文件列表 */
   const fetchRootDirectory = (path: string) => {
     getDirectoryContent(path as string).then((files) => {
@@ -158,6 +203,7 @@ export default function Home() {
         {(dir.children?.length || 0) > 0 ? (
           <Directory
             dir={dir}
+            currentSelectedPath={currentSelectedPath}
             handleItemClick={handleItemClick}
           />
         ) : (
@@ -170,7 +216,10 @@ export default function Home() {
         className={`w-10/12 flex h-screen flex-col items-center justify-between ${inter.className}`}
       >
         {file.path ? (
-          <Preview file={file} key={file.path}/>
+          <Preview
+            file={file}
+            updateFileName={updateFileName}
+          />
         ) : (
           <>
             <div
