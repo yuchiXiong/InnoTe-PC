@@ -95,11 +95,12 @@ export default function Home() {
     createFile(dirPath).then(() => {
       const pathArr = dirPath.replace(dir.path, '').split('\\');
       pathArr.shift();
+
       let currentDir = dir;
-      do {
+      while ((pathArr.length > 0)) {
         const left = pathArr.shift();
         currentDir = (currentDir.children as IDirectory[]).find(item => item.name === left) as IDirectory
-      } while ((pathArr.length > 0));
+      };
 
       getDirectoryContent(dirPath).then((files) => {
         currentDir.children = files.map(file => {
