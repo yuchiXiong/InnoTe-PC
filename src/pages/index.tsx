@@ -27,39 +27,37 @@ export default function Home() {
 
   // 当前选中的文件夹路径
   const [currentSelectedPath, setCurrentSelectedPath] = useState<string>('');
+  const [currentExpandedPath, setCurrentExpandedPath] = useState<string[]>([]);
 
   useEffect(() => {
     const lastFolderPath = localStorage.getItem(LAST_FOLDER_PATH);
 
-    if (lastFolderPath) fetchRootDirectory(lastFolderPath);
+    if (lastFolderPath) fetchDirectory({
+      name: lastFolderPath.split('\\').pop() || '',
+      path: lastFolderPath,
+      children: []
+    }, true);
   }, []);
 
-  /** 点击文件夹或文件 */
-  const handleItemClick = (item: IDirectory, isDirectory: boolean) => {
-    setCurrentSelectedPath(item.path);
-    if (isDirectory) {
-      getDirectoryContent(item.path).then((files) => {
-        item.children = files.map(file => {
-            const obj = {
-              name: file.name,
-              path: file.path,
-              children: file.isDirectory ? [] : undefined
-            }
+  const isDirectory = (item: IDirectory): boolean => 'children' in item;
 
-            if (!file.isDirectory) {
-              delete obj.children;
-            }
-            return obj;
-          }
-        );
-        setDirs({ ...dir });
-      });
+  /** 点击文件夹或文件 */
+  const handleItemClick = (item: IDirectory) => {
+    if (isDirectory(item)) {
+      const { path } = item;
+      if (currentExpandedPath.includes(path)) {
+        setCurrentExpandedPath(currentExpandedPath.filter(p => !p.startsWith(path)));
+      } else {
+        setCurrentExpandedPath(currentExpandedPath.concat(path));
+        fetchDirectory(item);
+      }
     } else {
       setFile({
         name: item.name,
         path: item.path,
         content: ''
       });
+      setCurrentSelectedPath(item.path);
     }
   }
 
@@ -68,12 +66,24 @@ export default function Home() {
     open({
       directory: true,
       recursive: true
-    }).then((path) => {
+    }).then(async (path) => {
       if (!path) return;
 
       localStorage.setItem(LAST_FOLDER_PATH, path as string);
 
-      fetchRootDirectory(path as string);
+      const APP_NAME = 'Noto';
+      if (typeof window !== "undefined") {
+        (await import('@tauri-apps/api/window'))
+          .appWindow
+          .setTitle(`${path} - ${APP_NAME}`);
+      }
+
+      // 获取当前文件夹下的文件列表
+      fetchDirectory({
+        name: (path as string).split('\\').pop() || '',
+        path: path as string,
+        children: []
+      }, true);
     });
   }
 
@@ -88,96 +98,61 @@ export default function Home() {
     createFile(dirPath).then(() => {
       const pathArr = dirPath.replace(dir.path, '').split('\\');
       pathArr.shift();
+
       let currentDir = dir;
-      do {
+      while ((pathArr.length > 0)) {
         const left = pathArr.shift();
         currentDir = (currentDir.children as IDirectory[]).find(item => item.name === left) as IDirectory
-      } while ((pathArr.length > 0));
+      };
 
-      getDirectoryContent(dirPath).then((files) => {
-        currentDir.children = files.map(file => {
-            const obj = {
-              name: file.name,
-              path: file.path,
-              children: file.isDirectory ? [] : undefined
-            }
-
-            if (!file.isDirectory) {
-              delete obj.children;
-            }
-            return obj;
-          }
-        );
-        setDirs({ ...dir });
-      });
+      fetchDirectory(currentDir);
     });
   }
 
   /** 重命名文件 */
   const updateFileName = (oldPath: string, newPath: string) => {
     renameFile(oldPath, newPath).then(res => {
-        // 获取修改的文件所在的文件夹绝对路径
-        const dirPath = newPath.split('\\').slice(0, -1).join('\\');
+      // 获取修改的文件所在的文件夹绝对路径
+      const dirPath = newPath.split('\\').slice(0, -1).join('\\');
 
-        // 获取这个路径相对于 app 根目录的相对路径
-        const relativePath = dirPath.replace(dir.path, '');
-        // 根据相对路径，找到对应的文件夹对象
-        const pathArr = relativePath.split('\\');
-        pathArr.shift();
-        let currentDir = dir;
-        while (pathArr.length > 0) {
-          const left = pathArr.shift();
-          currentDir = (currentDir.children as IDirectory[]).find(item => item.name === left) as IDirectory
-        }
-
-        getDirectoryContent(dirPath).then((files) => {
-          currentDir.children = files.map(file => {
-              const obj = {
-                name: file.name,
-                path: file.path,
-                children: file.isDirectory ? [] : undefined
-              }
-
-              if (!file.isDirectory) {
-                delete obj.children;
-              }
-              return obj;
-            }
-          );
-          setDirs({ ...dir });
-          // 更新所选文件
-          setFile({
-            name: res.split('\\').pop() || '',
-            path: res,
-            content: ''
-          });
-          setCurrentSelectedPath(res);
-        });
+      // 获取这个路径相对于 app 根目录的相对路径
+      const relativePath = dirPath.replace(dir.path, '');
+      // 根据相对路径，找到对应的文件夹对象
+      const pathArr = relativePath.split('\\');
+      pathArr.shift();
+      let currentDir = dir;
+      while (pathArr.length > 0) {
+        const left = pathArr.shift();
+        currentDir = (currentDir.children as IDirectory[]).find(item => item.name === left) as IDirectory
       }
+
+      fetchDirectory(currentDir);
+    }
     )
   };
 
-  /** 获取根目录下的文件列表 */
-  const fetchRootDirectory = (path: string) => {
+  /** 拉取目录下的文件列表 */
+  const fetchDirectory = (currentDir: IDirectory, isRoot = false) => {
+    const { path } = currentDir;
     getDirectoryContent(path as string).then((files) => {
-      const rootPathName = (path as string).split('\\').pop() || '';
-      setDirs({
-        name: rootPathName,
-        path: path as string,
-        children: files.map(file => {
-          const obj = {
-            name: file.name,
-            path: file.path,
-            children: file.isDirectory ? [] : undefined
-          }
+      currentDir.children = files.map(file => {
+        const obj = {
+          name: file.name,
+          path: file.path,
+          children: file.isDirectory ? [] : undefined
+        }
 
-          if (!file.isDirectory) {
-            delete obj.children;
-          }
-          return obj;
-        })
+        if (!file.isDirectory) {
+          delete obj.children;
+        }
+        return obj;
       });
-      setCurrentSelectedPath(path as string);
+
+      if (isRoot) {
+        setDirs({ ...currentDir });
+      } else {
+        setDirs({ ...dir });
+      }
     });
   }
 
@@ -190,20 +165,21 @@ export default function Home() {
             className='h-8 ml-auto text-gray-500'
             onClick={handleCreateFile}
           >
-            <FileAddition theme="filled" size="18" fill="#666"/>
+            <FileAddition theme="filled" size="18" fill="#666" />
           </button>
           <button
             title='打开文件夹'
             className='h-8 ml-2 text-gray-500'
             onClick={handleOpenDirectory}
           >
-            <FolderOpen className='' theme="filled" size="18" fill="#666"/>
+            <FolderOpen className='' theme="filled" size="18" fill="#666" />
           </button>
         </div>
         {(dir.children?.length || 0) > 0 ? (
           <Directory
             dir={dir}
             currentSelectedPath={currentSelectedPath}
+            currentExpandedPath={currentExpandedPath}
             handleItemClick={handleItemClick}
           />
         ) : (
