@@ -22,6 +22,11 @@
       "dialog": {
         "all": false,
         "open": true
+      },
+      "window": {
+        "all": false,
+        "create": true,
+        "setTitle": true
       }
     },
     "bundle": {
