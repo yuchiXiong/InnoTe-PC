@@ -27,6 +27,7 @@ export default function Home() {
 
   // 当前选中的文件夹路径
   const [currentSelectedPath, setCurrentSelectedPath] = useState<string>('');
+  const [currentExpandedPath, setCurrentExpandedPath] = useState<string[]>([]);
 
   useEffect(() => {
     const lastFolderPath = localStorage.getItem(LAST_FOLDER_PATH);
@@ -38,17 +39,25 @@ export default function Home() {
     }, true);
   }, []);
 
+  const isDirectory = (item: IDirectory): boolean => 'children' in item;
+
   /** 点击文件夹或文件 */
-  const handleItemClick = (item: IDirectory, isDirectory: boolean) => {
-    setCurrentSelectedPath(item.path);
-    if (isDirectory) {
-      fetchDirectory(item);
+  const handleItemClick = (item: IDirectory) => {
+    if (isDirectory(item)) {
+      const { path } = item;
+      if (currentExpandedPath.includes(path)) {
+        setCurrentExpandedPath(currentExpandedPath.filter(p => !p.startsWith(path)));
+      } else {
+        setCurrentExpandedPath(currentExpandedPath.concat(path));
+        fetchDirectory(item);
+      }
     } else {
       setFile({
         name: item.name,
         path: item.path,
         content: ''
       });
+      setCurrentSelectedPath(item.path);
     }
   }
 
@@ -144,8 +153,6 @@ export default function Home() {
       } else {
         setDirs({ ...dir });
       }
-
-      setCurrentSelectedPath(path as string);
     });
   }
 
@@ -172,6 +179,7 @@ export default function Home() {
           <Directory
             dir={dir}
             currentSelectedPath={currentSelectedPath}
+            currentExpandedPath={currentExpandedPath}
             handleItemClick={handleItemClick}
           />
         ) : (
