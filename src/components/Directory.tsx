@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { IDirectory } from '@/services/directory';
-import { FolderClose, FolderOpen, Editor as EditorIcon } from '@icon-park/react';
+import { FolderClose, FolderOpen, Editor as EditorIcon, Pic, Agreement } from '@icon-park/react';
 import { showTitle } from '@/utils';
 
 interface IDirectoryProps {
@@ -20,7 +20,6 @@ const Directory = (props: IDirectoryProps) => {
     handleItemClick,
     level = 1
   } = props;
-  const [extendRecord, setExtendRecord] = useState<Record<string, boolean>>({});
 
   /** 是目录 */
   const isDir = (dir: IDirectory): boolean => 'children' in dir;
@@ -36,11 +35,26 @@ const Directory = (props: IDirectoryProps) => {
 
   /** 渲染图标 */
   const showIcon = (item: IDirectory) => {
-    if (!isDir(item))
-      return <EditorIcon theme="multi-color" size="16" fill={['#48bb78', '#48bb78', '#FFF', '#48bb78']} />
-    return extendRecord[item.path]
-      ? <FolderOpen theme="multi-color" size="16" fill={['#f5a623', '#f5a623', '#FFF', '#f5a623']} />
-      : <FolderClose theme="multi-color" size="16" fill={['#f5a623', '#f5a623', '#FFF', '#f5a623']} />
+    if (isDir(item)) {
+      return currentExpandedPath?.includes(item.path)
+        ? <FolderOpen theme="multi-color" size="16" fill={['#f5a623', '#f5a623', '#FFF', '#f5a623']} />
+        : <FolderClose theme="multi-color" size="16" fill={['#f5a623', '#f5a623', '#FFF', '#f5a623']} />
+    }
+
+    const name = item.name.toLowerCase();
+    if (name.endsWith('.jpg') ||
+      name.endsWith('.png') ||
+      name.endsWith('.gif') ||
+      name.endsWith('.webp') ||
+      name.endsWith('.jpeg')
+    ) {
+      return <Pic theme="filled" size="17" fill="#50e3c2" />
+    }
+
+    return currentSelectedPath === item.path
+      ? <EditorIcon theme="multi-color" size="16" fill={['#48bb78', '#48bb78', '#FFF', '#48bb78']} />
+      : <EditorIcon theme="multi-color" size="16" fill={['#000', '#000', '#FFF', '#000']} />
+
   };
 
   return (
