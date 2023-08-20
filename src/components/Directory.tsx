@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { IDirectory } from '@/services/directory';
-import { FolderClose, FolderOpen, Notes } from '@icon-park/react';
+import { FolderClose, FolderOpen, Editor as EditorIcon } from '@icon-park/react';
 import { showTitle } from '@/utils';
 
 interface IDirectoryProps {
@@ -41,10 +41,10 @@ const Directory = (props: IDirectoryProps) => {
   /** 渲染图标 */
   const showIcon = (item: IDirectory) => {
     if (!isDir(item))
-      return <Notes theme="filled" size="16" fill="#999"/>;
+      return <EditorIcon theme="multi-color" size="16" fill={['#48bb78', '#48bb78', '#FFF', '#48bb78']} />
     return extendRecord[item.path]
-      ? <FolderOpen theme="filled" size="16" fill="#666"/>
-      : <FolderClose theme="filled" size="16" fill="#999"/>;
+      ? <FolderOpen theme="multi-color" size="16" fill={['#f5a623', '#f5a623', '#FFF', '#f5a623']} />
+      : <FolderClose theme="multi-color" size="16" fill={['#f5a623', '#f5a623', '#FFF', '#f5a623']} />
   };
 
   const handleItemClick = (item: IDirectory) => {

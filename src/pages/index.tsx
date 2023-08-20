@@ -31,29 +31,18 @@ export default function Home() {
   useEffect(() => {
     const lastFolderPath = localStorage.getItem(LAST_FOLDER_PATH);
 
-    if (lastFolderPath) fetchRootDirectory(lastFolderPath);
+    if (lastFolderPath) fetchDirectory({
+      name: lastFolderPath.split('\\').pop() || '',
+      path: lastFolderPath,
+      children: []
+    }, true);
   }, []);
 
   /** 点击文件夹或文件 */
   const handleItemClick = (item: IDirectory, isDirectory: boolean) => {
     setCurrentSelectedPath(item.path);
     if (isDirectory) {
-      getDirectoryContent(item.path).then((files) => {
-        item.children = files.map(file => {
-          const obj = {
-            name: file.name,
-            path: file.path,
-            children: file.isDirectory ? [] : undefined
-          }
-
-          if (!file.isDirectory) {
-            delete obj.children;
-          }
-          return obj;
-        }
-        );
-        setDirs({ ...dir });
-      });
+      fetchDirectory(item);
     } else {
       setFile({
         name: item.name,
@@ -80,7 +69,12 @@ export default function Home() {
           .setTitle(`${path} - ${APP_NAME}`);
       }
 
-      fetchRootDirectory(path as string);
+      // 获取当前文件夹下的文件列表
+      fetchDirectory({
+        name: (path as string).split('\\').pop() || '',
+        path: path as string,
+        children: []
+      }, true);
     });
   }
 
@@ -102,22 +96,7 @@ export default function Home() {
         currentDir = (currentDir.children as IDirectory[]).find(item => item.name === left) as IDirectory
       };
 
-      getDirectoryContent(dirPath).then((files) => {
-        currentDir.children = files.map(file => {
-          const obj = {
-            name: file.name,
-            path: file.path,
-            children: file.isDirectory ? [] : undefined
-          }
-
-          if (!file.isDirectory) {
-            delete obj.children;
-          }
-          return obj;
-        }
-        );
-        setDirs({ ...dir });
-      });
+      fetchDirectory(currentDir);
     });
   }
 
@@ -138,53 +117,34 @@ export default function Home() {
         currentDir = (currentDir.children as IDirectory[]).find(item => item.name === left) as IDirectory
       }
 
-      getDirectoryContent(dirPath).then((files) => {
-        currentDir.children = files.map(file => {
-          const obj = {
-            name: file.name,
-            path: file.path,
-            children: file.isDirectory ? [] : undefined
-          }
-
-          if (!file.isDirectory) {
-            delete obj.children;
-          }
-          return obj;
-        }
-        );
-        setDirs({ ...dir });
-        // 更新所选文件
-        setFile({
-          name: res.split('\\').pop() || '',
-          path: res,
-          content: ''
-        });
-        setCurrentSelectedPath(res);
-      });
+      fetchDirectory(currentDir);
     }
     )
   };
 
-  /** 获取根目录下的文件列表 */
-  const fetchRootDirectory = (path: string) => {
+  /** 拉取目录下的文件列表 */
+  const fetchDirectory = (currentDir: IDirectory, isRoot = false) => {
+    const { path } = currentDir;
     getDirectoryContent(path as string).then((files) => {
-      const rootPathName = (path as string).split('\\').pop() || '';
-      setDirs({
-        name: rootPathName,
-        path: path as string,
-        children: files.map(file => {
-          const obj = {
-            name: file.name,
-            path: file.path,
-            children: file.isDirectory ? [] : undefined
-          }
+      currentDir.children = files.map(file => {
+        const obj = {
+          name: file.name,
+          path: file.path,
+          children: file.isDirectory ? [] : undefined
+        }
 
-          if (!file.isDirectory) {
-            delete obj.children;
-          }
-          return obj;
-        })
+        if (!file.isDirectory) {
+          delete obj.children;
+        }
+        return obj;
       });
+
+      if (isRoot) {
+        setDirs({ ...currentDir });
+      } else {
+        setDirs({ ...dir });
+      }
+
       setCurrentSelectedPath(path as string);
     });
   }
