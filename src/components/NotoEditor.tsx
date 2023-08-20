@@ -43,6 +43,7 @@ const MilkdownEditor = ({ file }: { file: TEditorFile }) => {
       .make()
       .config(ctx => {
 
+        root.classList.add('h-full');
         ctx.set(rootCtx, root);
         ctx.set(defaultValueCtx, content);
 
@@ -78,7 +79,7 @@ const MilkdownEditor = ({ file }: { file: TEditorFile }) => {
           nodeViews: {
             image: (node, view, getPos) => {
               const dom: HTMLDivElement = document.createElement('div');
-              dom.className = 'w-max mx-auto max-w-full mt-4';
+              dom.className = 'max-w-full mx-auto mt-4 w-max';
 
               const img: HTMLImageElement = document.createElement('img');
               img.alt = node.attrs.alt;
@@ -100,7 +101,7 @@ const MilkdownEditor = ({ file }: { file: TEditorFile }) => {
                 title = document.createElement('small');
                 title.id = id;
                 title.innerHTML = node.attrs.alt;
-                title.className = 'block text-center text-md text-gray-500 border-t border-gray-200 pt-1 mt-4';
+                title.className = 'block pt-1 mt-4 text-center text-gray-500 border-t border-gray-200 text-md';
 
                 dom.appendChild(title);
               }
@@ -111,7 +112,8 @@ const MilkdownEditor = ({ file }: { file: TEditorFile }) => {
                 update: (node, decorations) => node.type.name === 'image'
               }
             }
-          }
+          },
+          attributes: { class: 'h-full', spellcheck: 'false' },
         });
 
         // 监听markdown更新事件，更新文件内容
@@ -124,9 +126,9 @@ const MilkdownEditor = ({ file }: { file: TEditorFile }) => {
       .use(commonmark)
       .use(prism)
       .use(listener)
-  }, [content])
+  }, [content, file])
 
-  return <Milkdown/>
+  return <Milkdown />
 }
 
 
@@ -178,9 +180,9 @@ const NotoEditor = (props: IDirectoryProps) => {
         className='py-2 mx-4 text-3xl font-medium focus:outline-0'
         disabled={isEditing.current}
       />
-      <div className='flex-1 bg-slate-50 border-t overflow-y-scroll'>
+      <div className='flex-1 h-full overflow-y-scroll border-t bg-slate-50'>
         <MilkdownProvider>
-          <MilkdownEditor file={file}/>
+          <MilkdownEditor file={file} />
         </MilkdownProvider>
       </div>
     </div>
