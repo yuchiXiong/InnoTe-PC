@@ -3,7 +3,6 @@ import { Inter } from 'next/font/google'
 import { useEffect, useState } from 'react'
 import type { IDirectory } from '@/services/directory';
 import Directory from '../components/Directory';
-import { TEditorFile } from '@/components/NotoEditor';
 import { createFile, getDirectoryContent, renameFile } from '@/actions/file';
 import { open } from "@tauri-apps/api/dialog"
 import { FileAddition, FolderOpen } from '@icon-park/react';
@@ -19,11 +18,6 @@ export default function Home() {
     path: '',
     children: []
   });
-  const [file, setFile] = useState<TEditorFile>({
-    name: '',
-    path: '',
-    content: ''
-  });
 
   // 当前选中的文件夹路径
   const [currentSelectedPath, setCurrentSelectedPath] = useState<string>('');
@@ -33,7 +27,7 @@ export default function Home() {
     const lastFolderPath = localStorage.getItem(LAST_FOLDER_PATH);
 
     if (lastFolderPath) fetchDirectory({
-      name: lastFolderPath.split('\\').pop() || '',
+      name: lastFolderPath.replaceAll('\\', '/').split('/').pop() || '',
       path: lastFolderPath,
       children: []
     }, true);
@@ -52,11 +46,6 @@ export default function Home() {
         fetchDirectory(item);
       }
     } else {
-      setFile({
-        name: item.name,
-        path: item.path,
-        content: ''
-      });
       setCurrentSelectedPath(item.path);
     }
   }
@@ -80,7 +69,7 @@ export default function Home() {
 
       // 获取当前文件夹下的文件列表
       fetchDirectory({
-        name: (path as string).split('\\').pop() || '',
+        name: (path as string).replaceAll('\\', '/').split('/').pop() || '',
         path: path as string,
         children: []
       }, true);
@@ -88,15 +77,10 @@ export default function Home() {
   }
 
   const handleCreateFile = () => {
-    let dirPath = '';
-    if (file.path === currentSelectedPath) {
-      const lastSlashIndex = file.path.lastIndexOf('\\');
-      dirPath = file.path.substring(0, lastSlashIndex);
-    } else {
-      dirPath = currentSelectedPath;
-    }
-    createFile(dirPath).then(() => {
-      const pathArr = dirPath.replace(dir.path, '').split('\\');
+    const dirPath = currentExpandedPath.at(-1) || localStorage.getItem(LAST_FOLDER_PATH) as string;
+
+    createFile(dirPath).then((newFilePath: string) => {
+      const pathArr = dirPath.replace(dir.path, '').replaceAll('\\', '/').split('/');
       pathArr.shift();
 
       let currentDir = dir;
@@ -106,6 +90,7 @@ export default function Home() {
       };
 
       fetchDirectory(currentDir);
+      setCurrentSelectedPath(newFilePath);
     });
   }
 
@@ -113,12 +98,12 @@ export default function Home() {
   const updateFileName = (oldPath: string, newPath: string) => {
     renameFile(oldPath, newPath).then(res => {
       // 获取修改的文件所在的文件夹绝对路径
-      const dirPath = newPath.split('\\').slice(0, -1).join('\\');
+        const dirPath = newPath.replaceAll('\\', '/').split('/').slice(0, -1).join('/');
 
       // 获取这个路径相对于 app 根目录的相对路径
       const relativePath = dirPath.replace(dir.path, '');
       // 根据相对路径，找到对应的文件夹对象
-      const pathArr = relativePath.split('\\');
+        const pathArr = relativePath.split('/');
       pathArr.shift();
       let currentDir = dir;
       while (pathArr.length > 0) {
@@ -191,9 +176,9 @@ export default function Home() {
       <section
         className={`w-10/12 flex h-screen flex-col items-center justify-between ${inter.className}`}
       >
-        {file.path ? (
+        {currentSelectedPath ? (
           <Preview
-            file={file}
+            filePath={currentSelectedPath}
             updateFileName={updateFileName}
           />
         ) : (

@@ -40,7 +40,13 @@ fn get_directory_by_path(path: &str) -> Vec<FileInfo> {
         let file_path = entry.path();
 
         // 跳过隐藏文件
-        if file_path.file_name().unwrap().to_str().unwrap().starts_with(".") {
+        if file_path
+          .file_name()
+          .unwrap()
+          .to_str()
+          .unwrap()
+          .starts_with(".")
+        {
           continue;
         }
 
@@ -75,8 +81,11 @@ fn write_string_to_file(path: PathBuf, content: String) {
 }
 
 #[tauri::command]
-fn create_markdown_file_to_path(path: PathBuf) {
-  println!("[Native Call][create_markdown_file_to_path]{:?}", path.to_str());
+fn create_markdown_file_to_path(path: PathBuf) -> PathBuf {
+  println!(
+    "[Native Call][create_markdown_file_to_path]{:?}",
+    path.to_str()
+  );
   // 默认文件名为 untitled.md 存在则自动加上数字后缀
   let mut file_name = String::from("untitled.md");
   let mut file_path = path.clone().join(file_name.clone());
@@ -86,7 +95,8 @@ fn create_markdown_file_to_path(path: PathBuf) {
     file_name = format!("untitled{}.md", index);
     file_path = path.join(file_name.clone());
   }
-  fs::write(file_path, "").unwrap();
+  fs::write(file_path.clone(), "").unwrap();
+  file_path
 }
 
 // 修改文件名
