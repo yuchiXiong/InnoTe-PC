@@ -22,7 +22,7 @@ const Preview = (props: IDirectoryProps) => {
       case 'webp':
       case 'jpeg':
         return (<div className='box-border flex items-center justify-center w-full h-full p-8 overflow-auto'>
-          <img className='max-h-full shadow-2xl' src={src} alt={file.name}/>
+          <img className='max-h-full shadow-2xl' src={src} alt={filePath}/>
         </div>);
       case 'md':
         return (<NotoEditor filePath={filePath} updateFileName={updateFileName}/>)
