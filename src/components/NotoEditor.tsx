@@ -85,8 +85,8 @@ const MilkdownEditor = ({ file }: { file: TEditorFile }) => {
               img.alt = node.attrs.alt;
               img.className = 'w-full rounded-md';
 
-              const dirPath = file.path.split('\\').slice(0, -1).join('\\');
-              const path = dirPath + '\\' + node.attrs.src;
+              const dirPath = file.path.replaceAll('\\', '/').split('/').slice(0, -1).join('/');
+              const path = dirPath + '/' + node.attrs.src;
 
               // 如果图片路径是网络路径，则不添加域名前缀
               img.src = node.attrs.src.startsWith('http') ? node.attrs.src : convertFileSrc(path);
@@ -152,7 +152,7 @@ const NotoEditor = (props: IDirectoryProps) => {
 
   const fetchData = (filePath: string) => {
     getFileContent(filePath).then(content => {
-      const path = filePath.split('\\');
+      const path = filePath.replaceAll('\\', '/').split('/');
       const name = path[path.length - 1];
       inputRef.current && (inputRef.current.value = showTitle(name));
       isEditing.current = false;
@@ -166,7 +166,7 @@ const NotoEditor = (props: IDirectoryProps) => {
     if (newName === '') return;
     if (newName === file.name) return;
 
-    const newPath = file.path.split('\\').slice(0, -1).join('\\') + '\\' + newName + '.md';
+    const newPath = file.path.replaceAll('\\', '/').split('/').slice(0, -1).join('/') + '/' + newName + '.md';
 
     renameCallback(file.path, newPath);
   }

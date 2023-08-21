@@ -28,8 +28,8 @@ const writeFile = (path: string, content: string): Promise<void> => {
   return invoke<void>('write_string_to_file', { path, content });
 }
 
-const createFile = (path: string): Promise<void> => {
-  return invoke<void>('create_markdown_file_to_path', { path });
+const createFile = (path: string): Promise<string> => {
+  return invoke<string>('create_markdown_file_to_path', { path });
 }
 
 const renameFile = (oldPath: string, newPath: string): Promise<string> => {
