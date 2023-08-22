@@ -1,6 +1,6 @@
-import Image from 'next/image'
+import Image from 'next/image';
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Inter } from 'next/font/google'
-import { useEffect, useState } from 'react'
 import type { IDirectory } from '@/services/directory';
 import Directory from '../components/Directory';
 import { createFile, getDirectoryContent, renameFile } from '@/actions/file';
@@ -8,6 +8,8 @@ import { open } from "@tauri-apps/api/dialog"
 import { FileAddition, FolderOpen } from '@icon-park/react';
 import { LAST_FOLDER_PATH } from "@/constants";
 import Preview from "@/components/Preview";
+import { Menu, Transition } from '@headlessui/react';
+import { useClickAway } from "react-use";
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -19,9 +21,22 @@ export default function Home() {
     children: []
   });
 
-  // 当前选中的文件夹路径
+  // 当前选中的文件路径
   const [currentSelectedPath, setCurrentSelectedPath] = useState<string>('');
+  // 当前展开的文件夹路径
   const [currentExpandedPath, setCurrentExpandedPath] = useState<string[]>([]);
+
+  /* 当前右键菜单的位置 */
+  const [currentContextMenuState, setCurrentContextMenuState] = useState<{
+    x: number,
+    y: number,
+    visible: boolean
+  }>({
+    x: 0,
+    y: 0,
+    visible: false
+  });
+  const menuContainRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const lastFolderPath = localStorage.getItem(LAST_FOLDER_PATH);
@@ -32,6 +47,16 @@ export default function Home() {
       children: []
     }, true);
   }, []);
+
+  /* 点击空白处，隐藏右键菜单 */
+  useClickAway(menuContainRef, () => {
+    setCurrentContextMenuState({ ...currentContextMenuState, visible: false });
+  });
+
+  /* 重置右键菜单位置 */
+  const handleResetContextMenuPosition = () => {
+    setCurrentContextMenuState({ x: 0, y: 0, visible: false });
+  }
 
   const isDirectory = (item: IDirectory): boolean => 'children' in item;
 
@@ -87,7 +112,7 @@ export default function Home() {
       while ((pathArr.length > 0)) {
         const left = pathArr.shift();
         currentDir = (currentDir.children as IDirectory[]).find(item => item.name === left) as IDirectory
-      };
+      }
 
       fetchDirectory(currentDir);
       setCurrentSelectedPath(newFilePath);
@@ -141,23 +166,81 @@ export default function Home() {
     });
   }
 
+  /** 打开右键菜单，选中对应的文件 */
+  const handleOpenContextMenu = ({ x, y }: { x: number, y: number }, cur: IDirectory) => {
+    setCurrentContextMenuState({ x, y, visible: true });
+    setCurrentSelectedPath(cur.path);
+  }
+
   return (
     <main className='flex'>
-      <nav className='w-2/12 max-h-screen overflow-auto border'>
+
+      <Menu>
+        <Transition
+          show={currentContextMenuState.visible}
+          as={Fragment}
+          enter="transition ease-out duration-100"
+          enterFrom="transform opacity-0 scale-95"
+          enterTo="transform opacity-100 scale-100"
+          leave="transition ease-in duration-75"
+          leaveFrom="transform opacity-100 scale-100"
+          leaveTo="transform opacity-0 scale-95"
+          afterLeave={handleResetContextMenuPosition}
+        >
+          <Menu.Items
+            ref={menuContainRef}
+            className="absolute z-50 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+            style={{
+              left: currentContextMenuState.x + 'px',
+              top: currentContextMenuState.y + 'px'
+            }}
+          >
+            <div className="px-1 py-1 ">
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    className={`${
+                      active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                  >
+                    重命名
+                  </button>
+                )}
+              </Menu.Item>
+            </div>
+            <div className="px-1 py-1">
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    className={`${
+                      active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                    } group flex w-full items-center rounded-md px-2 py-2 text-sm text-red-400`}
+                  >
+                    删除
+                  </button>
+                )}
+              </Menu.Item>
+            </div>
+          </Menu.Items
+          >
+        </Transition>
+      </Menu>
+
+      <nav className='w-2/12 max-h-screen overflow-auto'>
         <div className='flex items-center h-8 p-2 border-b'>
           <button
             title='创建文件'
             className='h-8 ml-auto text-gray-500'
             onClick={handleCreateFile}
           >
-            <FileAddition theme="filled" size="18" fill="#666" />
+            <FileAddition theme="filled" size="18" fill="#666"/>
           </button>
           <button
             title='打开文件夹'
             className='h-8 ml-2 text-gray-500'
             onClick={handleOpenDirectory}
           >
-            <FolderOpen className='' theme="filled" size="18" fill="#666" />
+            <FolderOpen className='' theme="filled" size="18" fill="#666"/>
           </button>
         </div>
         {(dir.children?.length || 0) > 0 ? (
@@ -166,6 +249,7 @@ export default function Home() {
             currentSelectedPath={currentSelectedPath}
             currentExpandedPath={currentExpandedPath}
             handleItemClick={handleItemClick}
+            openContextMenu={handleOpenContextMenu}
           />
         ) : (
           <div>

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.17",
     "@icon-park/react": "^1.4.2",
     "@milkdown/core": "^7.2.4",
     "@milkdown/ctx": "^7.2.4",
@@ -34,6 +35,7 @@
     "prism-themes": "^1.9.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-use": "^17.4.0",
     "tailwindcss": "3.3.3",
     "typescript": "5.1.6"
   },
