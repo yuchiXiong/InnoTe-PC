@@ -98,12 +98,12 @@ export default function Home() {
   const updateFileName = (oldPath: string, newPath: string) => {
     renameFile(oldPath, newPath).then(res => {
       // 获取修改的文件所在的文件夹绝对路径
-        const dirPath = newPath.replaceAll('\\', '/').split('/').slice(0, -1).join('/');
+      const dirPath = newPath.replaceAll('\\', '/').split('/').slice(0, -1).join('/');
 
       // 获取这个路径相对于 app 根目录的相对路径
       const relativePath = dirPath.replace(dir.path, '');
       // 根据相对路径，找到对应的文件夹对象
-        const pathArr = relativePath.split('/');
+      const pathArr = relativePath.split('/');
       pathArr.shift();
       let currentDir = dir;
       while (pathArr.length > 0) {
@@ -112,8 +112,8 @@ export default function Home() {
       }
 
       fetchDirectory(currentDir);
-    }
-    )
+      setCurrentSelectedPath(res);
+    })
   };
 
   /** 拉取目录下的文件列表 */

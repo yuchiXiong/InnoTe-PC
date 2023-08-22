@@ -144,7 +144,7 @@ const NotoEditor = (props: IDirectoryProps) => {
   // 上一次修改完成之前，不允许再次修改
   const isEditing = useRef<boolean>(false);
 
-  const renameCallback = useCallback(debounce(updateFileName, 450), [updateFileName]);
+  const renameCallback = useCallback(debounce(updateFileName, 450), [filePath, updateFileName]);
 
   useEffect(() => {
     fetchData(filePath);
@@ -179,6 +179,9 @@ const NotoEditor = (props: IDirectoryProps) => {
         onChange={handleFileRename}
         className='py-2 mx-4 text-3xl font-medium focus:outline-0'
         disabled={isEditing.current}
+        autoComplete='off'
+        autoCorrect='off'
+        autoCapitalize='off'
       />
       <div className='flex-1 h-full overflow-y-scroll border-t bg-slate-50'>
         <MilkdownProvider>
