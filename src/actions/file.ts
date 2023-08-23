@@ -36,10 +36,15 @@ const renameFile = (oldPath: string, newPath: string): Promise<string> => {
   return invoke<string>('rename_file_by_path', { oldPath, newPath });
 }
 
+const deleteFile = (path: string): Promise<void> => {
+  return invoke<void>('remove_file_by_path', { path });
+}
+
 export {
   getFileContent,
   getDirectoryContent,
   writeFile,
   createFile,
-  renameFile
+  renameFile,
+  deleteFile
 }

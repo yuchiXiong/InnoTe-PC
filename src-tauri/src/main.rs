@@ -131,6 +131,13 @@ fn rename_file_by_path(old_path: PathBuf, new_path: PathBuf) -> PathBuf {
   file_path
 }
 
+// 删除指定路径的文件
+#[tauri::command]
+fn remove_file_by_path(path: PathBuf) {
+  println!("[Native Call][remove_file_by_path] path:{:?}", path);
+  fs::remove_file(path).expect("remove file error");
+}
+
 fn main() {
   tauri::Builder::default()
     .invoke_handler(tauri::generate_handler![
@@ -140,6 +147,7 @@ fn main() {
             get_directory_by_path,
             create_markdown_file_to_path,
             rename_file_by_path,
+            remove_file_by_path,
         ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
