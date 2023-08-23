@@ -6,11 +6,9 @@ import { prism, prismConfig } from '@milkdown/plugin-prism';
 import { nord } from '@milkdown/theme-nord';
 import '@milkdown/theme-nord/style.css';
 import 'prism-themes/themes/prism-nord.css'
-import { showTitle } from "@/utils";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getFileContent, writeFile } from "@/actions/file";
 import { IDirectory } from "@/services/directory";
-import { debounce } from "lodash";
 import { convertFileSrc } from "@tauri-apps/api/tauri";
 import markdown from 'refractor/lang/markdown'
 import css from 'refractor/lang/css'
@@ -30,8 +28,7 @@ import rust from "refractor/lang/rust";
 export type TEditorFile = Exclude<IDirectory, 'name'> & { content: string }
 
 interface IDirectoryProps {
-  filePath: string,
-  updateFileName: (oldPath: string, newPath: string) => void
+  filePath: string
 }
 
 const MilkdownEditor = ({ file }: { file: TEditorFile }) => {
@@ -128,64 +125,32 @@ const MilkdownEditor = ({ file }: { file: TEditorFile }) => {
       .use(listener)
   }, [content, file])
 
-  return <Milkdown />
+  return <Milkdown/>
 }
 
 
 const NotoEditor = (props: IDirectoryProps) => {
-  const { filePath, updateFileName } = props;
+  const { filePath } = props;
 
   const [file, setFile] = useState<TEditorFile>({
     path: '',
     name: '',
     content: ''
   });
-  const inputRef = useRef<HTMLInputElement>(null);
-  // 上一次修改完成之前，不允许再次修改
-  const isEditing = useRef<boolean>(false);
-
-  const renameCallback = useCallback(debounce(updateFileName, 450), [filePath, updateFileName]);
 
   useEffect(() => {
-    fetchData(filePath);
-  }, [filePath]);
-
-  const fetchData = (filePath: string) => {
     getFileContent(filePath).then(content => {
       const path = filePath.replaceAll('\\', '/').split('/');
       const name = path[path.length - 1];
-      inputRef.current && (inputRef.current.value = showTitle(name));
-      isEditing.current = false;
       setFile({ path: filePath, name, content });
     });
-  }
-
-  const handleFileRename = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (isEditing.current) return;
-    const newName = event.target.value.trim();
-    if (newName === '') return;
-    if (newName === file.name) return;
-
-    const newPath = file.path.replaceAll('\\', '/').split('/').slice(0, -1).join('/') + '/' + newName + '.md';
-
-    renameCallback(file.path, newPath);
-  }
+  }, [filePath]);
 
   return (
     <div className='box-border flex flex-col w-full h-screen overflow-auto'>
-      <input
-        ref={inputRef}
-        defaultValue={showTitle(file.name)}
-        onChange={handleFileRename}
-        className='py-2 mx-4 text-3xl font-medium focus:outline-0'
-        disabled={isEditing.current}
-        autoComplete='off'
-        autoCorrect='off'
-        autoCapitalize='off'
-      />
       <div className='flex-1 h-full overflow-y-scroll border-t bg-slate-50'>
         <MilkdownProvider>
-          <MilkdownEditor file={file} />
+          <MilkdownEditor file={file}/>
         </MilkdownProvider>
       </div>
     </div>

@@ -4,11 +4,10 @@ import NotoEditor from "@/components/NotoEditor";
 
 interface IDirectoryProps {
   filePath: string,
-  updateFileName: (oldPath: string, newPath: string, cb?: () => void) => void
 }
 
 const Preview = (props: IDirectoryProps) => {
-  const { filePath, updateFileName } = props;
+  const { filePath } = props;
 
   const suffix = filePath.split('.').pop()?.toLowerCase() || '';
 
@@ -25,7 +24,7 @@ const Preview = (props: IDirectoryProps) => {
           <img className='max-h-full shadow-2xl' src={src} alt={filePath}/>
         </div>);
       case 'md':
-        return (<NotoEditor filePath={filePath} updateFileName={updateFileName}/>)
+        return (<NotoEditor filePath={filePath}/>)
       default:
         return (<div>暂不支持该文件预览</div>);
     }

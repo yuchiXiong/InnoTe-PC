@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.17",
     "@icon-park/react": "^1.4.2",
     "@milkdown/core": "^7.2.4",
     "@milkdown/ctx": "^7.2.4",
@@ -25,6 +26,7 @@
     "@types/react": "18.2.15",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.14",
+    "classnames": "^2.3.2",
     "core-js": "^3.32.0",
     "eslint": "8.45.0",
     "eslint-config-next": "13.4.10",
@@ -34,6 +36,7 @@
     "prism-themes": "^1.9.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-use": "^17.4.0",
     "tailwindcss": "3.3.3",
     "typescript": "5.1.6"
   },

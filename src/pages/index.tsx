@@ -1,13 +1,15 @@
-import Image from 'next/image'
+import Image from 'next/image';
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Inter } from 'next/font/google'
-import { useEffect, useState } from 'react'
 import type { IDirectory } from '@/services/directory';
 import Directory from '../components/Directory';
-import { createFile, getDirectoryContent, renameFile } from '@/actions/file';
+import { createFile, deleteFile, getDirectoryContent, renameFile } from '@/actions/file';
 import { open } from "@tauri-apps/api/dialog"
 import { FileAddition, FolderOpen } from '@icon-park/react';
 import { LAST_FOLDER_PATH } from "@/constants";
 import Preview from "@/components/Preview";
+import { Dialog, Menu, Transition } from '@headlessui/react';
+import { useClickAway } from "react-use";
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -19,9 +21,25 @@ export default function Home() {
     children: []
   });
 
-  // 当前选中的文件夹路径
+  // 当前选中的文件路径
   const [currentSelectedPath, setCurrentSelectedPath] = useState<string>('');
+  // 当前展开的文件夹路径
   const [currentExpandedPath, setCurrentExpandedPath] = useState<string[]>([]);
+  // 确认是否删除
+  const [confirmDialogVisible, setConfirmDialogVisible] = useState<boolean>(false);
+
+  /* 当前右键菜单的位置 */
+  const [currentContextMenuState, setCurrentContextMenuState] = useState<{
+    x: number,
+    y: number,
+    visible: boolean
+  }>({
+    x: 0,
+    y: 0,
+    visible: false
+  });
+  const [currentEditingFilePath, setCurrentEditingFilePath] = useState<string>('');
+  const menuContainRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const lastFolderPath = localStorage.getItem(LAST_FOLDER_PATH);
@@ -32,6 +50,16 @@ export default function Home() {
       children: []
     }, true);
   }, []);
+
+  /* 点击空白处，隐藏右键菜单 */
+  useClickAway(menuContainRef, () => {
+    setCurrentContextMenuState({ ...currentContextMenuState, visible: false });
+  });
+
+  /* 重置右键菜单位置 */
+  const handleResetContextMenuPosition = () => {
+    setCurrentContextMenuState({ x: 0, y: 0, visible: false });
+  }
 
   const isDirectory = (item: IDirectory): boolean => 'children' in item;
 
@@ -87,7 +115,7 @@ export default function Home() {
       while ((pathArr.length > 0)) {
         const left = pathArr.shift();
         currentDir = (currentDir.children as IDirectory[]).find(item => item.name === left) as IDirectory
-      };
+      }
 
       fetchDirectory(currentDir);
       setCurrentSelectedPath(newFilePath);
@@ -97,21 +125,8 @@ export default function Home() {
   /** 重命名文件 */
   const updateFileName = (oldPath: string, newPath: string) => {
     renameFile(oldPath, newPath).then(res => {
-      // 获取修改的文件所在的文件夹绝对路径
-      const dirPath = newPath.replaceAll('\\', '/').split('/').slice(0, -1).join('/');
-
-      // 获取这个路径相对于 app 根目录的相对路径
-      const relativePath = dirPath.replace(dir.path, '');
-      // 根据相对路径，找到对应的文件夹对象
-      const pathArr = relativePath.split('/');
-      pathArr.shift();
-      let currentDir = dir;
-      while (pathArr.length > 0) {
-        const left = pathArr.shift();
-        currentDir = (currentDir.children as IDirectory[]).find(item => item.name === left) as IDirectory
-      }
-
-      fetchDirectory(currentDir);
+      fetchDirectory(getFileParentDirectory(newPath));
+      setCurrentEditingFilePath('');
       setCurrentSelectedPath(res);
     })
   };
@@ -141,23 +156,183 @@ export default function Home() {
     });
   }
 
+  /** 打开右键菜单，选中对应的文件 */
+  const handleOpenContextMenu = ({ x, y }: { x: number, y: number }, cur: IDirectory) => {
+    setCurrentContextMenuState({ x, y, visible: true });
+    setCurrentSelectedPath(cur.path);
+  }
+
+  /** 开始重命名 */
+  const handleRenameStart = () => {
+    setCurrentEditingFilePath(currentSelectedPath);
+    setCurrentContextMenuState({ ...currentContextMenuState, visible: false });
+  }
+
+  /** 删除文件 */
+  const handleDeleteFile = () => {
+    setCurrentContextMenuState({ ...currentContextMenuState, visible: false });
+    setConfirmDialogVisible(true);
+  }
+
+  /** 确认删除 */
+  const handleDeleteConfirm = () => {
+    deleteFile(currentSelectedPath).then(() => {
+      fetchDirectory(getFileParentDirectory(currentSelectedPath));
+      setCurrentSelectedPath('');
+      setConfirmDialogVisible(false);
+    });
+  }
+
+  /** 获取文件所在的文件夹对象 */
+  const getFileParentDirectory = (path: string): IDirectory => {
+    const dirPath = path.replaceAll('\\', '/').split('/').slice(0, -1).join('/');
+    const rootPath = (localStorage.getItem(LAST_FOLDER_PATH) as string).replaceAll('\\', '/');
+    const relativePath = dirPath.replace(rootPath, '');
+
+    const pathArr = relativePath.split('/');
+    pathArr.shift();
+    let currentDir = dir;
+    while (pathArr.length > 0) {
+      const left = pathArr.shift();
+      currentDir = (currentDir.children as IDirectory[]).find(item => item.name === left) as IDirectory
+    }
+
+    return currentDir;
+  }
+
   return (
     <main className='flex'>
-      <nav className='w-2/12 max-h-screen overflow-auto border'>
+
+      <Transition appear show={confirmDialogVisible} as={Fragment}>
+        <Dialog as="div" className="relative z-10" onClose={() => setConfirmDialogVisible(false)}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black bg-opacity-25"/>
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel
+                  className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-lg font-medium leading-6 text-red-400"
+                  >
+                    确认删除吗？
+                  </Dialog.Title>
+                  <div className="mt-2">
+                    <p className="text-sm text-gray-500">
+                      删除后将无法恢复，请谨慎操作！
+                    </p>
+                  </div>
+
+                  <div className="mt-4">
+                    <button
+                      type="button"
+                      className="inline-flex outline-none justify-center rounded-md border border-transparent bg-red-100 px-4 py-2 text-sm font-medium text-red-900 hover:bg-red-200"
+                      onClick={handleDeleteConfirm}
+                    >
+                      确认
+                    </button>
+                    <button
+                      type="button"
+                      className="inline-flex ml-2 justify-center rounded-md border border-transparent bg-gray-100 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-200"
+                      onClick={() => setConfirmDialogVisible(false)}
+                    >
+                      取消
+                    </button>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
+
+      <Menu>
+        <Transition
+          show={currentContextMenuState.visible}
+          as={Fragment}
+          enter="transition ease-out duration-100"
+          enterFrom="transform opacity-0 scale-95"
+          enterTo="transform opacity-100 scale-100"
+          leave="transition ease-in duration-75"
+          leaveFrom="transform opacity-100 scale-100"
+          leaveTo="transform opacity-0 scale-95"
+          afterLeave={handleResetContextMenuPosition}
+        >
+          <Menu.Items
+            ref={menuContainRef}
+            className="absolute z-50 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+            style={{
+              left: currentContextMenuState.x + 'px',
+              top: currentContextMenuState.y + 'px'
+            }}
+          >
+            <div className="px-1 py-1 ">
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    className={`${
+                      active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                    onClick={handleRenameStart}
+                  >
+                    重命名
+                  </button>
+                )}
+              </Menu.Item>
+            </div>
+            <div className="px-1 py-1">
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    className={`${
+                      active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                    } group flex w-full items-center rounded-md px-2 py-2 text-sm text-red-400`}
+                    onClick={handleDeleteFile}
+                  >
+                    删除
+                  </button>
+                )}
+              </Menu.Item>
+            </div>
+          </Menu.Items
+          >
+        </Transition>
+      </Menu>
+
+      <nav className='w-2/12 max-h-screen overflow-auto'>
         <div className='flex items-center h-8 p-2 border-b'>
           <button
             title='创建文件'
             className='h-8 ml-auto text-gray-500'
             onClick={handleCreateFile}
           >
-            <FileAddition theme="filled" size="18" fill="#666" />
+            <FileAddition theme="filled" size="18" fill="#666"/>
           </button>
           <button
             title='打开文件夹'
             className='h-8 ml-2 text-gray-500'
             onClick={handleOpenDirectory}
           >
-            <FolderOpen className='' theme="filled" size="18" fill="#666" />
+            <FolderOpen className='' theme="filled" size="18" fill="#666"/>
           </button>
         </div>
         {(dir.children?.length || 0) > 0 ? (
@@ -165,7 +340,11 @@ export default function Home() {
             dir={dir}
             currentSelectedPath={currentSelectedPath}
             currentExpandedPath={currentExpandedPath}
+            currentEditingFilePath={currentEditingFilePath}
             handleItemClick={handleItemClick}
+            openContextMenu={handleOpenContextMenu}
+            updateFileName={updateFileName}
+            afterRename={() => setCurrentEditingFilePath('')}
           />
         ) : (
           <div>
@@ -179,7 +358,6 @@ export default function Home() {
         {currentSelectedPath ? (
           <Preview
             filePath={currentSelectedPath}
-            updateFileName={updateFileName}
           />
         ) : (
           <>
