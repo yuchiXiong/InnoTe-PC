@@ -36,6 +36,7 @@ export default function Home() {
     y: 0,
     visible: false
   });
+  const [currentEditingFilePath, setCurrentEditingFilePath] = useState<string>('');
   const menuContainRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -126,7 +127,7 @@ export default function Home() {
       const dirPath = newPath.replaceAll('\\', '/').split('/').slice(0, -1).join('/');
 
       // 获取这个路径相对于 app 根目录的相对路径
-      const relativePath = dirPath.replace(dir.path, '');
+      const relativePath = dirPath.replace(dir.path.replaceAll('\\', '/'), '');
       // 根据相对路径，找到对应的文件夹对象
       const pathArr = relativePath.split('/');
       pathArr.shift();
@@ -137,6 +138,7 @@ export default function Home() {
       }
 
       fetchDirectory(currentDir);
+      setCurrentEditingFilePath('');
       setCurrentSelectedPath(res);
     })
   };
@@ -172,6 +174,12 @@ export default function Home() {
     setCurrentSelectedPath(cur.path);
   }
 
+  /** 开始重命名 */
+  const handleRenameStart = () => {
+    setCurrentEditingFilePath(currentSelectedPath);
+    setCurrentContextMenuState({ ...currentContextMenuState, visible: false });
+  }
+
   return (
     <main className='flex'>
 
@@ -202,6 +210,7 @@ export default function Home() {
                     className={`${
                       active ? 'bg-violet-500 text-white' : 'text-gray-900'
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                    onClick={handleRenameStart}
                   >
                     重命名
                   </button>
@@ -248,8 +257,11 @@ export default function Home() {
             dir={dir}
             currentSelectedPath={currentSelectedPath}
             currentExpandedPath={currentExpandedPath}
+            currentEditingFilePath={currentEditingFilePath}
             handleItemClick={handleItemClick}
             openContextMenu={handleOpenContextMenu}
+            updateFileName={updateFileName}
+            afterRename={() => setCurrentEditingFilePath('')}
           />
         ) : (
           <div>
@@ -263,7 +275,6 @@ export default function Home() {
         {currentSelectedPath ? (
           <Preview
             filePath={currentSelectedPath}
-            updateFileName={updateFileName}
           />
         ) : (
           <>
