@@ -129,7 +129,7 @@ const MilkdownEditor = ({ file }: { file: TEditorFile }) => {
 }
 
 
-const NotoEditor = (props: IDirectoryProps) => {
+const InnoTeEditor = (props: IDirectoryProps) => {
   const { filePath } = props;
 
   const [file, setFile] = useState<TEditorFile>({
@@ -158,4 +158,4 @@ const NotoEditor = (props: IDirectoryProps) => {
   )
 }
 
-export default NotoEditor;
+export default InnoTeEditor;

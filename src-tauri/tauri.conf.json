@@ -7,7 +7,7 @@
     "distDir": "../out"
   },
   "package": {
-    "productName": "noto",
+    "productName": "InnoTe",
     "version": "0.1.2"
   },
   "tauri": {
@@ -44,7 +44,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.bubuyu.noto",
+      "identifier": "com.bubuyu.innote",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -73,7 +73,7 @@
         "fullscreen": false,
         "height": 900,
         "resizable": true,
-        "title": "Noto",
+        "title": "InnoTe",
         "width": 1440
       }
     ]
