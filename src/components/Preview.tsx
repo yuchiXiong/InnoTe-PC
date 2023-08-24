@@ -26,7 +26,7 @@ const Preview = (props: IDirectoryProps) => {
       case 'md':
         return (<InnoTeEditor filePath={filePath}/>)
       default:
-        return (<div>暂不支持该文件预览</div>);
+        return (<div className='h-full flex justify-center items-center text-gray-400'>暂不支持预览该格式文件</div>);
     }
   }, [filePath]);
 }

@@ -356,7 +356,7 @@ export default function Home() {
         </Transition>
       </Menu>
 
-      <nav className='w-2/12 max-h-screen overflow-auto'>
+      <nav className='w-2/12 border-r max-h-screen overflow-auto'>
         <div className='flex items-center h-8 p-2 border-b'>
           <button
             title='创建文件'
