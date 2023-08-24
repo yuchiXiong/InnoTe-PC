@@ -1,9 +1,9 @@
 <div align="center">
-  <h1>Noto</h1>
+  <h1>InnoTe</h1>
   <h3>基于 Tauri/Next 的 Markdown 管理工具。</h3>
 
   <figure>
-    <img src="./example.png" alt="Noto Logo" />
+    <img src="./example.png" alt="InnoTe Logo" />
     <figcaption>
       <p align="center">自由的 Markdown 管理工具。</p>
     </figcaption>
