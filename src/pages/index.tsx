@@ -17,6 +17,7 @@ import { LAST_FOLDER_PATH } from "@/constants";
 import Preview from "@/components/Preview";
 import { Dialog, Menu, Transition } from '@headlessui/react';
 import { useClickAway } from "react-use";
+import { fileComparable } from "@/utils/file";
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -173,7 +174,7 @@ export default function Home() {
           delete obj.children;
         }
         return obj;
-      });
+      }).sort(fileComparable);
 
       if (isRoot) {
         setDirs({ ...currentDir });
