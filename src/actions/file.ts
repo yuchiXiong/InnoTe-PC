@@ -32,6 +32,10 @@ const createFile = (path: string): Promise<string> => {
   return invoke<string>('create_markdown_file_to_path', { path });
 }
 
+const createDirectory = (path: string): Promise<string> => {
+  return invoke<string>('create_directory_to_path', { path });
+}
+
 const renameFile = (oldPath: string, newPath: string): Promise<string> => {
   return invoke<string>('rename_file_by_path', { oldPath, newPath });
 }
@@ -40,11 +44,17 @@ const deleteFile = (path: string): Promise<void> => {
   return invoke<void>('remove_file_by_path', { path });
 }
 
+const deleteDirectory = (path: string): Promise<void> => {
+  return invoke<void>('remove_directory_by_path', { path });
+}
+
 export {
   getFileContent,
   getDirectoryContent,
   writeFile,
   createFile,
+  createDirectory,
   renameFile,
-  deleteFile
+  deleteFile,
+  deleteDirectory
 }

@@ -27,6 +27,10 @@
         "all": false,
         "create": true,
         "setTitle": true
+      },
+      "shell": {
+        "all": false,
+        "open": ".*"
       }
     },
     "bundle": {

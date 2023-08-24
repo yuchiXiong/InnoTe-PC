@@ -99,6 +99,23 @@ fn create_markdown_file_to_path(path: PathBuf) -> PathBuf {
   file_path
 }
 
+// 创建目录
+#[tauri::command]
+fn create_directory_to_path(path: PathBuf) -> PathBuf {
+  println!("[Native Call][create_directory_to_path]{:?}", path);
+  // 默认文件名为 untitled.md 存在则自动加上数字后缀
+  let mut file_name = String::from("untitled");
+  let mut file_path = path.clone().join(file_name.clone());
+  let mut index = 0;
+  while file_path.exists() {
+    index += 1;
+    file_name = format!("新建文件夹{}", index);
+    file_path = path.join(file_name.clone());
+  }
+  fs::create_dir(file_path.clone()).unwrap();
+  file_path
+}
+
 // 修改文件名
 #[tauri::command]
 fn rename_file_by_path(old_path: PathBuf, new_path: PathBuf) -> PathBuf {
@@ -138,6 +155,13 @@ fn remove_file_by_path(path: PathBuf) {
   fs::remove_file(path).expect("remove file error");
 }
 
+// 删除指定路径的文件夹
+#[tauri::command]
+fn remove_directory_by_path(path: PathBuf) {
+  println!("[Native Call][remove_directory_by_path] path:{:?}", path);
+  fs::remove_dir_all(path).expect("remove directory error");
+}
+
 fn main() {
   tauri::Builder::default()
     .invoke_handler(tauri::generate_handler![
@@ -146,8 +170,10 @@ fn main() {
             write_string_to_file,
             get_directory_by_path,
             create_markdown_file_to_path,
+            create_directory_to_path,
             rename_file_by_path,
             remove_file_by_path,
+            remove_directory_by_path
         ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
