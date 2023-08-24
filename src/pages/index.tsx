@@ -12,7 +12,8 @@ import {
   renameFile
 } from '@/actions/file';
 import { open } from "@tauri-apps/api/dialog"
-import { FileAdditionOne, FolderOpen, FolderPlus } from '@icon-park/react';
+import { open as shellOpen } from "@tauri-apps/api/shell"
+import { FileAdditionOne, FolderOpen, FolderPlus, LocalPin } from '@icon-park/react';
 import { LAST_FOLDER_PATH } from "@/constants";
 import Preview from "@/components/Preview";
 import { Dialog, Menu, Transition } from '@headlessui/react';
@@ -233,6 +234,10 @@ export default function Home() {
     return currentDir;
   }
 
+  const handleOpenLocalDirectory = () => {
+    shellOpen(localStorage.getItem(LAST_FOLDER_PATH) as string);
+  }
+
   return (
     <main className='flex'>
 
@@ -373,6 +378,13 @@ export default function Home() {
             onClick={handleOpenDirectory}
           >
             <FolderOpen className='' theme="filled" size="18" fill="#666"/>
+          </button>
+          <button
+            title='打开项目目录'
+            className='h-8 ml-2 text-gray-500'
+            onClick={handleOpenLocalDirectory}
+          >
+            <LocalPin theme="outline" size="18" fill="#666"/>
           </button>
         </div>
         {(dir.children?.length || 0) > 0 ? (
