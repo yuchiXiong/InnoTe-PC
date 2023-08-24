@@ -3,9 +3,16 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { Inter } from 'next/font/google'
 import type { IDirectory } from '@/services/directory';
 import Directory from '../components/Directory';
-import { createFile, deleteFile, getDirectoryContent, renameFile } from '@/actions/file';
+import {
+  createDirectory,
+  createFile,
+  deleteDirectory,
+  deleteFile,
+  getDirectoryContent,
+  renameFile
+} from '@/actions/file';
 import { open } from "@tauri-apps/api/dialog"
-import { FileAddition, FolderOpen } from '@icon-park/react';
+import { FileAdditionOne, FolderOpen, FolderPlus } from '@icon-park/react';
 import { LAST_FOLDER_PATH } from "@/constants";
 import Preview from "@/components/Preview";
 import { Dialog, Menu, Transition } from '@headlessui/react';
@@ -104,10 +111,30 @@ export default function Home() {
     });
   }
 
+  /** 创建文件 */
   const handleCreateFile = () => {
     const dirPath = currentExpandedPath.at(-1) || localStorage.getItem(LAST_FOLDER_PATH) as string;
 
     createFile(dirPath).then((newFilePath: string) => {
+      const pathArr = dirPath.replace(dir.path, '').replaceAll('\\', '/').split('/');
+      pathArr.shift();
+
+      let currentDir = dir;
+      while ((pathArr.length > 0)) {
+        const left = pathArr.shift();
+        currentDir = (currentDir.children as IDirectory[]).find(item => item.name === left) as IDirectory
+      }
+
+      fetchDirectory(currentDir);
+      setCurrentSelectedPath(newFilePath);
+    });
+  }
+
+  /** 创建文件夹 */
+  const handleCreateDirectory = () => {
+    const dirPath = currentExpandedPath.at(-1) || localStorage.getItem(LAST_FOLDER_PATH) as string;
+
+    createDirectory(dirPath).then((newFilePath: string) => {
       const pathArr = dirPath.replace(dir.path, '').replaceAll('\\', '/').split('/');
       pathArr.shift();
 
@@ -176,7 +203,12 @@ export default function Home() {
 
   /** 确认删除 */
   const handleDeleteConfirm = () => {
-    deleteFile(currentSelectedPath).then(() => {
+    // TODO 判断是一个文件夹还是文件
+    const isFile = currentSelectedPath.includes('.');
+
+    const optFn = isFile ? deleteFile : deleteDirectory;
+
+    optFn(currentSelectedPath).then(() => {
       fetchDirectory(getFileParentDirectory(currentSelectedPath));
       setCurrentSelectedPath('');
       setConfirmDialogVisible(false);
@@ -325,7 +357,14 @@ export default function Home() {
             className='h-8 ml-auto text-gray-500'
             onClick={handleCreateFile}
           >
-            <FileAddition theme="filled" size="18" fill="#666"/>
+            <FileAdditionOne theme="outline" size="18" fill="#666"/>
+          </button>
+          <button
+            title='新建文件夹'
+            className='h-8 ml-2 text-gray-500'
+            onClick={handleCreateDirectory}
+          >
+            <FolderPlus theme="outline" size="18" fill="#666"/>
           </button>
           <button
             title='打开文件夹'
