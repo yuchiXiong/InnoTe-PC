@@ -1,11 +1,13 @@
 <div align="center">
-  <h1>InnoTe</h1>
+  <!-- <h1>InnoTe</h1> -->
+  <img src="./public/innote-logo.png" />
+  <hr />
   <h3>基于 Tauri/Next 的 Markdown 管理工具。</h3>
 
   <figure>
     <img src="./example.png" alt="InnoTe Logo" />
     <figcaption>
-      <p align="center">自由的 Markdown 管理工具。</p>
+      <!-- <p align="center">自由的 Markdown 管理工具。</p> -->
     </figcaption>
   </figure>
 </div>
