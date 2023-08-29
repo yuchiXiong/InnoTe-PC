@@ -206,8 +206,9 @@ export default function Home() {
   /** 确认删除 */
   const handleDeleteConfirm = () => {
     // TODO 判断是一个文件夹还是文件
-    const isFile = currentSelectedPath.includes('.');
-
+    // TODO Fix bug: 如果目录本身就有.，那么就会被判断为文件
+    const fileName = currentSelectedPath.replaceAll('\\', '/').split('/').pop() || '';
+    const isFile = fileName.includes('.');
     const optFn = isFile ? deleteFile : deleteDirectory;
 
     optFn(currentSelectedPath).then(() => {
@@ -252,11 +253,11 @@ export default function Home() {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-black bg-opacity-25"/>
+            <div className="fixed inset-0 bg-black bg-opacity-25" />
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
+            <div className="flex items-center justify-center min-h-full p-4 text-center">
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -267,7 +268,7 @@ export default function Home() {
                 leaveTo="opacity-0 scale-95"
               >
                 <Dialog.Panel
-                  className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  className="w-full max-w-md p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
                   <Dialog.Title
                     as="h3"
                     className="text-lg font-medium leading-6 text-red-400"
@@ -283,14 +284,14 @@ export default function Home() {
                   <div className="mt-4">
                     <button
                       type="button"
-                      className="inline-flex outline-none justify-center rounded-md border border-transparent bg-red-100 px-4 py-2 text-sm font-medium text-red-900 hover:bg-red-200"
+                      className="inline-flex justify-center px-4 py-2 text-sm font-medium text-red-900 bg-red-100 border border-transparent rounded-md outline-none hover:bg-red-200"
                       onClick={handleDeleteConfirm}
                     >
                       确认
                     </button>
                     <button
                       type="button"
-                      className="inline-flex ml-2 justify-center rounded-md border border-transparent bg-gray-100 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-200"
+                      className="inline-flex justify-center px-4 py-2 ml-2 text-sm font-medium text-gray-900 bg-gray-100 border border-transparent rounded-md hover:bg-gray-200"
                       onClick={() => setConfirmDialogVisible(false)}
                     >
                       取消
@@ -317,7 +318,7 @@ export default function Home() {
         >
           <Menu.Items
             ref={menuContainRef}
-            className="absolute z-50 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+            className="absolute z-50 w-56 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
             style={{
               left: currentContextMenuState.x + 'px',
               top: currentContextMenuState.y + 'px'
@@ -327,9 +328,8 @@ export default function Home() {
               <Menu.Item>
                 {({ active }) => (
                   <button
-                    className={`${
-                      active ? 'bg-violet-500 text-white' : 'text-gray-900'
-                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                    className={`${active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                      } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                     onClick={handleRenameStart}
                   >
                     重命名
@@ -341,9 +341,8 @@ export default function Home() {
               <Menu.Item>
                 {({ active }) => (
                   <button
-                    className={`${
-                      active ? 'bg-violet-500 text-white' : 'text-gray-900'
-                    } group flex w-full items-center rounded-md px-2 py-2 text-sm text-red-400`}
+                    className={`${active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                      } group flex w-full items-center rounded-md px-2 py-2 text-sm text-red-400`}
                     onClick={handleDeleteFile}
                   >
                     删除
@@ -356,35 +355,35 @@ export default function Home() {
         </Transition>
       </Menu>
 
-      <nav className='w-2/12 border-r max-h-screen overflow-auto'>
+      <nav className='w-2/12 max-h-screen overflow-auto border-r'>
         <div className='flex items-center h-8 p-2 border-b'>
           <button
             title='创建文件'
             className='h-8 ml-auto text-gray-500'
             onClick={handleCreateFile}
           >
-            <FileAdditionOne theme="outline" size="18" fill="#666"/>
+            <FileAdditionOne theme="outline" size="18" fill="#666" />
           </button>
           <button
             title='新建文件夹'
             className='h-8 ml-2 text-gray-500'
             onClick={handleCreateDirectory}
           >
-            <FolderPlus theme="outline" size="18" fill="#666"/>
+            <FolderPlus theme="outline" size="18" fill="#666" />
           </button>
           <button
             title='打开文件夹'
             className='h-8 ml-2 text-gray-500'
             onClick={handleOpenDirectory}
           >
-            <FolderOpen className='' theme="filled" size="18" fill="#666"/>
+            <FolderOpen className='' theme="filled" size="18" fill="#666" />
           </button>
           <button
             title='打开项目目录'
             className='h-8 ml-2 text-gray-500'
             onClick={handleOpenLocalDirectory}
           >
-            <LocalPin theme="outline" size="18" fill="#666"/>
+            <LocalPin theme="outline" size="18" fill="#666" />
           </button>
         </div>
         {(dir.children?.length || 0) > 0 ? (
