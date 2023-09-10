@@ -14,11 +14,12 @@ import {
 import { open } from "@tauri-apps/api/dialog"
 import { open as shellOpen } from "@tauri-apps/api/shell"
 import { FileAdditionOne, FolderOpen, FolderPlus, LocalPin } from '@icon-park/react';
-import { LAST_FOLDER_PATH } from "@/constants";
+import { LAST_FOLDER_PATH, LAST_TREE_SIDEBAR_WIDTH } from "@/constants";
 import Preview from "@/components/Preview";
 import { Dialog, Menu, Transition } from '@headlessui/react';
 import { useClickAway } from "react-use";
 import { fileComparable } from "@/utils/file";
+import SplitPane from 'react-split-pane';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -49,6 +50,7 @@ export default function Home() {
   });
   const [currentEditingFilePath, setCurrentEditingFilePath] = useState<string>('');
   const menuContainRef = useRef<HTMLDivElement>(null);
+  const [splitPaneSize, setSplitPaneSize] = useState<number | 'w-2/12'>('w-2/12');
 
   useEffect(() => {
     const lastFolderPath = localStorage.getItem(LAST_FOLDER_PATH);
@@ -58,6 +60,12 @@ export default function Home() {
       path: lastFolderPath,
       children: []
     }, true);
+
+    setSplitPaneSize(
+      typeof window === 'object'
+        ? Number(localStorage.getItem(LAST_TREE_SIDEBAR_WIDTH) || 0) || 'w-2/12'
+        : 'w-2/12'
+    )
   }, []);
 
   /* 点击空白处，隐藏右键菜单 */
@@ -239,6 +247,7 @@ export default function Home() {
     shellOpen(localStorage.getItem(LAST_FOLDER_PATH) as string);
   }
 
+
   return (
     <main className='flex'>
 
@@ -355,78 +364,91 @@ export default function Home() {
         </Transition>
       </Menu>
 
-      <nav className='w-2/12 max-h-screen overflow-auto border-r'>
-        <div className='flex items-center h-8 p-2 border-b'>
-          <button
-            title='创建文件'
-            className='h-8 ml-auto text-gray-500'
-            onClick={handleCreateFile}
-          >
-            <FileAdditionOne theme="outline" size="18" fill="#666" />
-          </button>
-          <button
-            title='新建文件夹'
-            className='h-8 ml-2 text-gray-500'
-            onClick={handleCreateDirectory}
-          >
-            <FolderPlus theme="outline" size="18" fill="#666" />
-          </button>
-          <button
-            title='打开文件夹'
-            className='h-8 ml-2 text-gray-500'
-            onClick={handleOpenDirectory}
-          >
-            <FolderOpen className='' theme="filled" size="18" fill="#666" />
-          </button>
-          <button
-            title='打开项目目录'
-            className='h-8 ml-2 text-gray-500'
-            onClick={handleOpenLocalDirectory}
-          >
-            <LocalPin theme="outline" size="18" fill="#666" />
-          </button>
-        </div>
-        {(dir.children?.length || 0) > 0 ? (
-          <Directory
-            dir={dir}
-            currentSelectedPath={currentSelectedPath}
-            currentExpandedPath={currentExpandedPath}
-            currentEditingFilePath={currentEditingFilePath}
-            handleItemClick={handleItemClick}
-            openContextMenu={handleOpenContextMenu}
-            updateFileName={updateFileName}
-            afterRename={() => setCurrentEditingFilePath('')}
-          />
-        ) : (
-          <div>
-            {/* empty placeholder */}
-          </div>
-        )}
-      </nav>
-      <section
-        className={`w-10/12 flex h-screen flex-col items-center justify-between ${inter.className}`}
+      {/* @ts-ignore */}
+      <SplitPane
+        split="vertical"
+        minSize='w-2/12'
+        size={splitPaneSize}
+        onChange={size => {
+          setSplitPaneSize(size);
+          localStorage.setItem(LAST_TREE_SIDEBAR_WIDTH, size.toString());
+        }}
       >
-        {currentSelectedPath ? (
-          <Preview
-            filePath={currentSelectedPath}
-          />
-        ) : (
-          <>
-            <div
-              className="flex flex-col h-screen justify-center place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
-              <Image
-                className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-                src="/innote-logo.png"
-                alt="InnoTe Logo"
-                width={180}
-                height={37}
-                priority
-              />
-              <p className='mt-1 font-sans text-gray-400'>下面再放一句话显得逼格比较高</p>
+        <nav className='max-h-screen overflow-auto'>
+          <div className='flex items-center h-8 p-2 border-b'>
+            <button
+              title='创建文件'
+              className='h-8 ml-auto text-gray-500'
+              onClick={handleCreateFile}
+            >
+              <FileAdditionOne theme="outline" size="18" fill="#666" />
+            </button>
+            <button
+              title='新建文件夹'
+              className='h-8 ml-2 text-gray-500'
+              onClick={handleCreateDirectory}
+            >
+              <FolderPlus theme="outline" size="18" fill="#666" />
+            </button>
+            <button
+              title='打开文件夹'
+              className='h-8 ml-2 text-gray-500'
+              onClick={handleOpenDirectory}
+            >
+              <FolderOpen className='' theme="filled" size="18" fill="#666" />
+            </button>
+            <button
+              title='打开项目目录'
+              className='h-8 ml-2 text-gray-500'
+              onClick={handleOpenLocalDirectory}
+            >
+              <LocalPin theme="outline" size="18" fill="#666" />
+            </button>
+          </div>
+          {(dir.children?.length || 0) > 0 ? (
+            <Directory
+              dir={dir}
+              currentSelectedPath={currentSelectedPath}
+              currentExpandedPath={currentExpandedPath}
+              currentEditingFilePath={currentEditingFilePath}
+              handleItemClick={handleItemClick}
+              openContextMenu={handleOpenContextMenu}
+              updateFileName={updateFileName}
+              afterRename={() => setCurrentEditingFilePath('')}
+            />
+          ) : (
+            <div>
+              {/* empty placeholder */}
             </div>
-          </>
-        )}
-      </section>
+          )}
+        </nav>
+
+        <section
+          className={`w-full flex h-screen flex-col items-center justify-between ${inter.className}`}
+        >
+          {currentSelectedPath ? (
+            <Preview
+              filePath={currentSelectedPath}
+            />
+          ) : (
+            <>
+              <div
+                className="flex flex-col h-screen justify-center place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
+                <Image
+                  className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
+                  src="/innote-logo.png"
+                  alt="InnoTe Logo"
+                  width={180}
+                  height={37}
+                  priority
+                />
+                <p className='mt-1 font-sans text-gray-400'>下面再放一句话显得逼格比较高</p>
+              </div>
+            </>
+          )}
+        </section>
+      </SplitPane>
+
     </main>
   )
 }
