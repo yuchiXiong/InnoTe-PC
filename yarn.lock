@@ -126,70 +126,79 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@milkdown/core@^7.2.4":
-  version "7.2.4"
-  resolved "https://registry.npmmirror.com/@milkdown/core/-/core-7.2.4.tgz#a8db5d7927312ce0aede179ba3f2c2f64810981e"
-  integrity sha512-ztO9DlKNFX7oPCUjUIszoDxTDbqEjHcCeIRlkQy43c1TOcG+87Pw7OP5dphFWBJf6D4lAnGHAU+xTIth0NCXqQ==
+"@milkdown/core@^7.3.0":
+  version "7.3.0"
+  resolved "https://registry.npmmirror.com/@milkdown/core/-/core-7.3.0.tgz#f4e2ffa07025db4f32b2cab253a40a94f45115e4"
+  integrity sha512-spB2mti5glP/ZJROgNZuaVgDC0djhMEnd9eu5iEmm4qqUj4RabKDZkVox9kZE0ngn6msWtDW/qQwnIFd4iFGdQ==
   dependencies:
-    "@milkdown/exception" "7.2.4"
-    mdast-util-to-markdown "^1.5.0"
+    "@milkdown/exception" "7.3.0"
     remark-parse "^10.0.1"
     remark-stringify "^10.0.2"
     tslib "^2.5.0"
     unified "^10.1.0"
 
-"@milkdown/ctx@^7.2.4":
-  version "7.2.4"
-  resolved "https://registry.npmmirror.com/@milkdown/ctx/-/ctx-7.2.4.tgz#e1f213542a997ad824c6c31d4ecedeaf604b67d6"
-  integrity sha512-EffizTJgwI4tPQS0QZYBC7/p9GiD4fToTObjphlQ+OgJYyu+n7P0aYWr0LEEM1mUDTCBM8lMIef50pfuA0gDbw==
+"@milkdown/ctx@^7.3.0":
+  version "7.3.0"
+  resolved "https://registry.npmmirror.com/@milkdown/ctx/-/ctx-7.3.0.tgz#b92d3d7d002a63f3c4074238dfbc59b5b31173c5"
+  integrity sha512-VQG/Q0TrEcZ5HbTQrqiXgeOwZYv7qmnH8X5msS9GL8bvALGUHJ3QjxQONJrK53ZZ5HbHPSi7QOBDlAn57m69fg==
   dependencies:
-    "@milkdown/exception" "7.2.4"
+    "@milkdown/exception" "7.3.0"
     tslib "^2.5.0"
 
-"@milkdown/exception@7.2.4":
-  version "7.2.4"
-  resolved "https://registry.npmmirror.com/@milkdown/exception/-/exception-7.2.4.tgz#70f8a3be2fa5bde8f47c47bcd3ce5a4b30e3ca01"
-  integrity sha512-TpVGz7iNo6wAVcIiJ4KQmp1pfiY4ok3bye6xntbZ0tCIIsRiu5BI3/uO1H/pIv/v7OP+Yp5Q5t0aC67x8sY2rg==
+"@milkdown/exception@7.3.0":
+  version "7.3.0"
+  resolved "https://registry.npmmirror.com/@milkdown/exception/-/exception-7.3.0.tgz#737048465a4bf0a577057358580d337f99eb1802"
+  integrity sha512-ZqN+3dOfTQ8OafkJz6WqNrNWxg3D6hACMa2XyPul+uVU0MLZXURfijCO26eByNlhG05w0Uo/FJfaapPZO3aE6g==
   dependencies:
     tslib "^2.5.0"
 
-"@milkdown/plugin-listener@^7.2.4":
-  version "7.2.4"
-  resolved "https://registry.npmmirror.com/@milkdown/plugin-listener/-/plugin-listener-7.2.4.tgz#c00eaa7185210d9b1b0baa8b8a2d1993c3c84928"
-  integrity sha512-Yes3zB3hOGPEsY8hdv9wNs0G1iwq29E3QkuNPn8pbPA92ak9funb93Rzcen8dU954MwmkE3lIt+2+1/ANejRVQ==
+"@milkdown/plugin-listener@^7.3.0":
+  version "7.3.0"
+  resolved "https://registry.npmmirror.com/@milkdown/plugin-listener/-/plugin-listener-7.3.0.tgz#8a8e1c7df2dd2aaf7d12faa53c697e04d754a18f"
+  integrity sha512-W/52MQ0occGD7MLXz7pDaeUA5NClz9bPuU7ZypOMY8x3CmbVXQMNMfOoEC0udgeRRbroZ+Vj4SEcedZ/CU6gPA==
   dependencies:
-    "@milkdown/utils" "7.2.4"
+    "@milkdown/utils" "7.3.0"
     "@types/lodash.debounce" "^4.0.7"
     lodash.debounce "^4.0.8"
     tslib "^2.5.0"
 
-"@milkdown/plugin-prism@^7.2.4":
-  version "7.2.4"
-  resolved "https://registry.npmmirror.com/@milkdown/plugin-prism/-/plugin-prism-7.2.4.tgz#1a5538d8109fa799233d705eb81f3802c1c5de1b"
-  integrity sha512-Y6Y0RKKDCfZkxxqn36Cs5QQuc4YEWrbAeLdgMiZEctQcQbPcbGwP27izFLOtsQK8cfH3S72BtUUuiOvgh2jQiA==
+"@milkdown/plugin-prism@^7.3.0":
+  version "7.3.0"
+  resolved "https://registry.npmmirror.com/@milkdown/plugin-prism/-/plugin-prism-7.3.0.tgz#04005d356013ebbc700f3c2146c0d1d9db69ee5d"
+  integrity sha512-X39eBtUzB45ITE6Snxj7KXyuWe2SOAyocqRlhes7xff17aAr+57GSdtN4VLl3aqdGFlcBds839B5jkAEsp3RJQ==
   dependencies:
-    "@milkdown/utils" "7.2.4"
+    "@milkdown/utils" "7.3.0"
     refractor "^4.0.0"
     tslib "^2.5.0"
 
-"@milkdown/preset-commonmark@^7.2.4":
-  version "7.2.4"
-  resolved "https://registry.npmmirror.com/@milkdown/preset-commonmark/-/preset-commonmark-7.2.4.tgz#d8baf43a50df6e81d55579fc048f5f731b591276"
-  integrity sha512-Exncik8ucDhxzE5EPF+YR/213ioiLZ81mKgqJo3WN2HM9Zvbj3fe26cvROvf6y+lmZi0+8xDRb5wRni/z7w6xw==
+"@milkdown/preset-commonmark@^7.3.0":
+  version "7.3.0"
+  resolved "https://registry.npmmirror.com/@milkdown/preset-commonmark/-/preset-commonmark-7.3.0.tgz#53edd865044d7cdcbb872210ed76b7064e2810f2"
+  integrity sha512-9ehBLkiLomp2av6E7YiRwihx/YsZ+LR80Y21e+Qzs5d6eq+payhblKQSaYYlVECA7gwLIOy67Lu8jxkOnO++rw==
   dependencies:
-    "@milkdown/exception" "7.2.4"
-    "@milkdown/utils" "7.2.4"
+    "@milkdown/exception" "7.3.0"
+    "@milkdown/utils" "7.3.0"
     "@sindresorhus/slugify" "^2.2.0"
     remark-inline-links "^6.0.0"
     tslib "^2.5.0"
-    unist-util-visit "^4.0.0"
+    unist-util-visit "^5.0.0"
 
-"@milkdown/prose@^7.2.4":
-  version "7.2.4"
-  resolved "https://registry.npmmirror.com/@milkdown/prose/-/prose-7.2.4.tgz#ae8a5047eee19956582d0a5556e208ad87ad6b6e"
-  integrity sha512-v5eBFqySdOYaFQwwGOzCNKoPonMXN7TE+bUD0MfmOhELxb4fAgWQVeOM/uA3hmLz4frFuiv+KzrD+/gFEnwUjw==
+"@milkdown/preset-gfm@^7.3.0":
+  version "7.3.0"
+  resolved "https://registry.npmmirror.com/@milkdown/preset-gfm/-/preset-gfm-7.3.0.tgz#01575be1d080cd52cf6a4325c31e8b566288d5f1"
+  integrity sha512-ulaJ1Ck90SflxIe+tjq092ntu8PNbIM/pF0oYUuuUFHcKVkwqMmYevjRmFYo2MZiBvUv8eYOLbJ1xnGauB0aAg==
   dependencies:
-    "@milkdown/exception" "7.2.4"
+    "@milkdown/exception" "7.3.0"
+    "@milkdown/utils" "7.3.0"
+    remark-gfm "^3.0.0"
+    tslib "^2.5.0"
+
+"@milkdown/prose@^7.3.0":
+  version "7.3.0"
+  resolved "https://registry.npmmirror.com/@milkdown/prose/-/prose-7.3.0.tgz#a2c339187d90cf1494450592c41812e6316f03da"
+  integrity sha512-YUx30G++v9RYw6mM5ybvvezaJBdSyhrDsVeuAzYkBRfV2fwEV1airBt96BqY+FeICYqE1eTCUty/gaPzpcwbPg==
+  dependencies:
+    "@milkdown/exception" "7.3.0"
     prosemirror-changeset "^2.2.1"
     prosemirror-commands "^1.5.2"
     prosemirror-dropcursor "^1.8.1"
@@ -205,42 +214,40 @@
     prosemirror-view "^1.31.5"
     tslib "^2.5.0"
 
-"@milkdown/react@^7.2.4":
-  version "7.2.4"
-  resolved "https://registry.npmmirror.com/@milkdown/react/-/react-7.2.4.tgz#2bb3136c0270b369194e2be6ff406c837baa095f"
-  integrity sha512-IKwMHqBHMMwYOy2UsBXnECrg4SBcNb+CNfH/mdZaxTT0zC4gmeBGn/PsLPuiYq3FyCLQsb/xgHFZeujFnU8KjA==
+"@milkdown/react@^7.3.0":
+  version "7.3.0"
+  resolved "https://registry.npmmirror.com/@milkdown/react/-/react-7.3.0.tgz#7ab17d954c7b24eed86b573ffd093c3008cee109"
+  integrity sha512-jYNUhYWSP3J8FNLnRkDiLLljtBiBPC304mmRs6X7TdNArfWSYsCC0L57RPtfbPGgO/uNqarZOip84gF34B1hAg==
   dependencies:
-    "@milkdown/utils" "7.2.4"
+    "@milkdown/utils" "7.3.0"
     tslib "^2.5.0"
 
-"@milkdown/theme-nord@^7.2.4":
-  version "7.2.4"
-  resolved "https://registry.npmmirror.com/@milkdown/theme-nord/-/theme-nord-7.2.4.tgz#b84d844457a1aff8ee2c1e427adf381be4cc3d9e"
-  integrity sha512-egmTcf9KnPr0sjj5SQNcLxQfwQ3LZ+fuf4Dtn4ATfdJBkJV13ufbG6mG7o12yq5FtjgOPDvdC4WFINam9Wj8sQ==
+"@milkdown/theme-nord@^7.3.0":
+  version "7.3.0"
+  resolved "https://registry.npmmirror.com/@milkdown/theme-nord/-/theme-nord-7.3.0.tgz#373ff06e179f99cb681ffcc80da6a6ff9532d42f"
+  integrity sha512-sXFY8wxn/38BbQJyrJQvj8/h0kKvrVr3q8U/lSzNoCywH1hQ/qapSFDs3HvXLSWOZm/V0CaIP7H/MwHKF8N6MA==
   dependencies:
-    clsx "^1.2.1"
+    clsx "^2.0.0"
     tslib "^2.5.0"
 
-"@milkdown/transformer@^7.2.4":
-  version "7.2.4"
-  resolved "https://registry.npmmirror.com/@milkdown/transformer/-/transformer-7.2.4.tgz#ee20ace5374fd5820fdf77da8fe1db3cacb5175e"
-  integrity sha512-ZSgxzh7yUemSrkE6JIZqscct45/1xHXc6vtAjTdOzYCkpyG+RdIJOXw1TtaloYo88QufymPxz7Cu7QS6F8Kr0A==
+"@milkdown/transformer@^7.3.0":
+  version "7.3.0"
+  resolved "https://registry.npmmirror.com/@milkdown/transformer/-/transformer-7.3.0.tgz#9be11cf559997139d1ecd8a40dd707db85f9ee1e"
+  integrity sha512-6QGutmJvg1sk3aVQGG4kX+MmemLnd0v1x7uoGeyOuQT4MIPAquxPmzECHwRJJal+eyhFLnssOZLzC6qF85b+bQ==
   dependencies:
-    "@milkdown/exception" "7.2.4"
-    "@types/mdast" "^3.0.10"
-    "@types/unist" "^2.0.6"
+    "@milkdown/exception" "7.3.0"
     remark "^14.0.1"
     remark-parse "^10.0.2"
     remark-stringify "^10.0.3"
     tslib "^2.5.0"
     unified "^10.1.0"
 
-"@milkdown/utils@7.2.4":
-  version "7.2.4"
-  resolved "https://registry.npmmirror.com/@milkdown/utils/-/utils-7.2.4.tgz#a937b87668a96c001e579502706edab959803e28"
-  integrity sha512-vnqeLv6XoaYLaxyrj0XpdpGyMWbKEQ8Hbk4+f7FYZL9TfGlvZuYlcvvAt5BBZnFXnqIimGIJ+T48eb17z7DsrA==
+"@milkdown/utils@7.3.0":
+  version "7.3.0"
+  resolved "https://registry.npmmirror.com/@milkdown/utils/-/utils-7.3.0.tgz#1420e1d550057f30936a3bc8f3f4bb9e13b9cba6"
+  integrity sha512-hOb6UwRIX2e7lpAn3sjAtsF2idzQN/wQ9MLbjoIevQXjO1EgNYiBTFIfTDnI4ka+VrVScvZtZ2D8cAA+3+ndxw==
   dependencies:
-    "@milkdown/exception" "7.2.4"
+    "@milkdown/exception" "7.3.0"
     nanoid "^4.0.0"
     tslib "^2.5.0"
 
@@ -478,7 +485,7 @@
   resolved "https://registry.npmmirror.com/@types/lodash/-/lodash-4.14.197.tgz#e95c5ddcc814ec3e84c891910a01e0c8a378c54b"
   integrity sha512-BMVOiWs0uNxHVlHBgzTIqJYmj+PgCo4euloGF+5m4okL3rEYzM2EEv78mw8zWSMM57dM7kVIgJ2QDvwHSoCI5g==
 
-"@types/mdast@^3.0.0", "@types/mdast@^3.0.10":
+"@types/mdast@^3.0.0":
   version "3.0.12"
   resolved "https://registry.npmmirror.com/@types/mdast/-/mdast-3.0.12.tgz#beeb511b977c875a5b0cc92eab6fcac2f0895514"
   integrity sha512-DT+iNIRNX884cx0/Q1ja7NyUPpZuv0KPyL5rGNxm1WC1OtHstl7n4Jb7nk+xacNShQMbczJjt8uFzznpp6kYBg==
@@ -526,10 +533,15 @@
   resolved "https://registry.npmmirror.com/@types/scheduler/-/scheduler-0.16.3.tgz#cef09e3ec9af1d63d2a6cc5b383a737e24e6dcf5"
   integrity sha512-5cJ8CB4yAx7BH1oMvdU0Jh9lrEXyPkar6F9G/ERswkCuvP4KQZfZkSjcMbAICCpQTN4OuZn8tz0HiKv9TGZgrQ==
 
-"@types/unist@^2", "@types/unist@^2.0.0", "@types/unist@^2.0.6":
+"@types/unist@^2", "@types/unist@^2.0.0":
   version "2.0.7"
   resolved "https://registry.npmmirror.com/@types/unist/-/unist-2.0.7.tgz#5b06ad6894b236a1d2bd6b2f07850ca5c59cf4d6"
   integrity sha512-cputDpIbFgLUaGQn6Vqg3/YsJwxUwHLO13v3i5ouxT4lat0khip9AEWxtERujXV9wxIB1EyF97BSJFt6vpdI8g==
+
+"@types/unist@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.npmmirror.com/@types/unist/-/unist-3.0.0.tgz#988ae8af1e5239e89f9fbb1ade4c935f4eeedf9a"
+  integrity sha512-MFETx3tbTjE7Uk6vvnWINA/1iJ7LuMdO4fcq8UfF0pRbj01aGLduVvQcRyswuACJdpnHgg8E3rQLhaRdNEJS0w==
 
 "@typescript-eslint/parser@^5.42.0":
   version "5.62.0"
@@ -820,6 +832,11 @@ caniuse-lite@^1.0.30001406, caniuse-lite@^1.0.30001464, caniuse-lite@^1.0.300015
   resolved "https://registry.npmmirror.com/caniuse-lite/-/caniuse-lite-1.0.30001515.tgz#418aefeed9d024cd3129bfae0ccc782d4cb8f12b"
   integrity sha512-eEFDwUOZbE24sb+Ecsx3+OvNETqjWIdabMy52oOkIgcUtAsQifjUG9q4U9dgTHJM2mfk4uEPxc0+xuFdJ629QA==
 
+ccount@^2.0.0:
+  version "2.0.1"
+  resolved "https://registry.npmmirror.com/ccount/-/ccount-2.0.1.tgz#17a3bf82302e0870d6da43a01311a8bc02a3ecf5"
+  integrity sha512-eyrF0jiFpY+3drT6383f1qhkbGsLSifNAjA61IUjZjmLCWjItY6LB9ft9YhoDgwfmclB2zhu51Lc7+95b8NRAg==
+
 chalk@^4.0.0:
   version "4.1.2"
   resolved "https://registry.npmmirror.com/chalk/-/chalk-4.1.2.tgz#aac4e2b7734a740867aeb16bf02aad556a1e7a01"
@@ -868,10 +885,10 @@ client-only@0.0.1, client-only@^0.0.1:
   resolved "https://registry.npmmirror.com/client-only/-/client-only-0.0.1.tgz#38bba5d403c41ab150bff64a95c85013cf73bca1"
   integrity sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==
 
-clsx@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.npmmirror.com/clsx/-/clsx-1.2.1.tgz#0ddc4a20a549b59c93a4116bb26f5294ca17dc12"
-  integrity sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==
+clsx@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.npmmirror.com/clsx/-/clsx-2.0.0.tgz#12658f3fd98fafe62075595a5c30e43d18f3d00b"
+  integrity sha512-rQ1+kcj+ttHG0MKVGBUXwayCCF1oh39BF5COIpRzuCEv8Mwjv0XucrI2ExNTOn9IlLifGClWQcU9BrZORvtw6Q==
 
 color-convert@^2.0.1:
   version "2.0.1"
@@ -2117,6 +2134,11 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
+markdown-table@^3.0.0:
+  version "3.0.3"
+  resolved "https://registry.npmmirror.com/markdown-table/-/markdown-table-3.0.3.tgz#e6331d30e493127e031dd385488b5bd326e4a6bd"
+  integrity sha512-Z1NL3Tb1M9wH4XESsCDEksWoKTdlUafKc4pt0GRwjUyXaCFZ+dc3g2erqB6zm3szA2IUSi7VnPI+o/9jnxh9hw==
+
 mdast-util-definitions@^5.0.0:
   version "5.1.2"
   resolved "https://registry.npmmirror.com/mdast-util-definitions/-/mdast-util-definitions-5.1.2.tgz#9910abb60ac5d7115d6819b57ae0bcef07a3f7a7"
@@ -2125,6 +2147,16 @@ mdast-util-definitions@^5.0.0:
     "@types/mdast" "^3.0.0"
     "@types/unist" "^2.0.0"
     unist-util-visit "^4.0.0"
+
+mdast-util-find-and-replace@^2.0.0:
+  version "2.2.2"
+  resolved "https://registry.npmmirror.com/mdast-util-find-and-replace/-/mdast-util-find-and-replace-2.2.2.tgz#cc2b774f7f3630da4bd592f61966fecade8b99b1"
+  integrity sha512-MTtdFRz/eMDHXzeK6W3dO7mXUlF82Gom4y0oOgvHhh/HXZAGvIQDUvQ0SuUx+j2tv44b8xTHOm8K/9OoRFnXKw==
+  dependencies:
+    "@types/mdast" "^3.0.0"
+    escape-string-regexp "^5.0.0"
+    unist-util-is "^5.0.0"
+    unist-util-visit-parents "^5.0.0"
 
 mdast-util-from-markdown@^1.0.0:
   version "1.3.1"
@@ -2144,6 +2176,64 @@ mdast-util-from-markdown@^1.0.0:
     unist-util-stringify-position "^3.0.0"
     uvu "^0.5.0"
 
+mdast-util-gfm-autolink-literal@^1.0.0:
+  version "1.0.3"
+  resolved "https://registry.npmmirror.com/mdast-util-gfm-autolink-literal/-/mdast-util-gfm-autolink-literal-1.0.3.tgz#67a13abe813d7eba350453a5333ae1bc0ec05c06"
+  integrity sha512-My8KJ57FYEy2W2LyNom4n3E7hKTuQk/0SES0u16tjA9Z3oFkF4RrC/hPAPgjlSpezsOvI8ObcXcElo92wn5IGA==
+  dependencies:
+    "@types/mdast" "^3.0.0"
+    ccount "^2.0.0"
+    mdast-util-find-and-replace "^2.0.0"
+    micromark-util-character "^1.0.0"
+
+mdast-util-gfm-footnote@^1.0.0:
+  version "1.0.2"
+  resolved "https://registry.npmmirror.com/mdast-util-gfm-footnote/-/mdast-util-gfm-footnote-1.0.2.tgz#ce5e49b639c44de68d5bf5399877a14d5020424e"
+  integrity sha512-56D19KOGbE00uKVj3sgIykpwKL179QsVFwx/DCW0u/0+URsryacI4MAdNJl0dh+u2PSsD9FtxPFbHCzJ78qJFQ==
+  dependencies:
+    "@types/mdast" "^3.0.0"
+    mdast-util-to-markdown "^1.3.0"
+    micromark-util-normalize-identifier "^1.0.0"
+
+mdast-util-gfm-strikethrough@^1.0.0:
+  version "1.0.3"
+  resolved "https://registry.npmmirror.com/mdast-util-gfm-strikethrough/-/mdast-util-gfm-strikethrough-1.0.3.tgz#5470eb105b483f7746b8805b9b989342085795b7"
+  integrity sha512-DAPhYzTYrRcXdMjUtUjKvW9z/FNAMTdU0ORyMcbmkwYNbKocDpdk+PX1L1dQgOID/+vVs1uBQ7ElrBQfZ0cuiQ==
+  dependencies:
+    "@types/mdast" "^3.0.0"
+    mdast-util-to-markdown "^1.3.0"
+
+mdast-util-gfm-table@^1.0.0:
+  version "1.0.7"
+  resolved "https://registry.npmmirror.com/mdast-util-gfm-table/-/mdast-util-gfm-table-1.0.7.tgz#3552153a146379f0f9c4c1101b071d70bbed1a46"
+  integrity sha512-jjcpmNnQvrmN5Vx7y7lEc2iIOEytYv7rTvu+MeyAsSHTASGCCRA79Igg2uKssgOs1i1po8s3plW0sTu1wkkLGg==
+  dependencies:
+    "@types/mdast" "^3.0.0"
+    markdown-table "^3.0.0"
+    mdast-util-from-markdown "^1.0.0"
+    mdast-util-to-markdown "^1.3.0"
+
+mdast-util-gfm-task-list-item@^1.0.0:
+  version "1.0.2"
+  resolved "https://registry.npmmirror.com/mdast-util-gfm-task-list-item/-/mdast-util-gfm-task-list-item-1.0.2.tgz#b280fcf3b7be6fd0cc012bbe67a59831eb34097b"
+  integrity sha512-PFTA1gzfp1B1UaiJVyhJZA1rm0+Tzn690frc/L8vNX1Jop4STZgOE6bxUhnzdVSB+vm2GU1tIsuQcA9bxTQpMQ==
+  dependencies:
+    "@types/mdast" "^3.0.0"
+    mdast-util-to-markdown "^1.3.0"
+
+mdast-util-gfm@^2.0.0:
+  version "2.0.2"
+  resolved "https://registry.npmmirror.com/mdast-util-gfm/-/mdast-util-gfm-2.0.2.tgz#e92f4d8717d74bdba6de57ed21cc8b9552e2d0b6"
+  integrity sha512-qvZ608nBppZ4icQlhQQIAdc6S3Ffj9RGmzwUKUWuEICFnd1LVkN3EktF7ZHAgfcEdvZB5owU9tQgt99e2TlLjg==
+  dependencies:
+    mdast-util-from-markdown "^1.0.0"
+    mdast-util-gfm-autolink-literal "^1.0.0"
+    mdast-util-gfm-footnote "^1.0.0"
+    mdast-util-gfm-strikethrough "^1.0.0"
+    mdast-util-gfm-table "^1.0.0"
+    mdast-util-gfm-task-list-item "^1.0.0"
+    mdast-util-to-markdown "^1.0.0"
+
 mdast-util-phrasing@^3.0.0:
   version "3.0.1"
   resolved "https://registry.npmmirror.com/mdast-util-phrasing/-/mdast-util-phrasing-3.0.1.tgz#c7c21d0d435d7fb90956038f02e8702781f95463"
@@ -2152,7 +2242,7 @@ mdast-util-phrasing@^3.0.0:
     "@types/mdast" "^3.0.0"
     unist-util-is "^5.0.0"
 
-mdast-util-to-markdown@^1.0.0, mdast-util-to-markdown@^1.5.0:
+mdast-util-to-markdown@^1.0.0, mdast-util-to-markdown@^1.3.0:
   version "1.5.0"
   resolved "https://registry.npmmirror.com/mdast-util-to-markdown/-/mdast-util-to-markdown-1.5.0.tgz#c13343cb3fc98621911d33b5cd42e7d0731171c6"
   integrity sha512-bbv7TPv/WC49thZPg3jXuqzuvI45IL2EVAr/KxF0BSdHsU0ceFHOmwQn6evxAh1GaoK/6GQ1wp4R4oW2+LFL/A==
@@ -2188,7 +2278,7 @@ merge2@^1.3.0, merge2@^1.4.1:
   resolved "https://registry.npmmirror.com/merge2/-/merge2-1.4.1.tgz#4368892f885e907455a6fd7dc55c0c9d404990ae"
   integrity sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==
 
-micromark-core-commonmark@^1.0.1:
+micromark-core-commonmark@^1.0.0, micromark-core-commonmark@^1.0.1:
   version "1.1.0"
   resolved "https://registry.npmmirror.com/micromark-core-commonmark/-/micromark-core-commonmark-1.1.0.tgz#1386628df59946b2d39fb2edfd10f3e8e0a75bb8"
   integrity sha512-BgHO1aRbolh2hcrzL2d1La37V0Aoz73ymF8rAcKnohLy93titmv62E0gP8Hrx9PKcKrqCZ1BbLGbP3bEhoXYlw==
@@ -2209,6 +2299,85 @@ micromark-core-commonmark@^1.0.1:
     micromark-util-symbol "^1.0.0"
     micromark-util-types "^1.0.1"
     uvu "^0.5.0"
+
+micromark-extension-gfm-autolink-literal@^1.0.0:
+  version "1.0.5"
+  resolved "https://registry.npmmirror.com/micromark-extension-gfm-autolink-literal/-/micromark-extension-gfm-autolink-literal-1.0.5.tgz#5853f0e579bbd8ef9e39a7c0f0f27c5a063a66e7"
+  integrity sha512-z3wJSLrDf8kRDOh2qBtoTRD53vJ+CWIyo7uyZuxf/JAbNJjiHsOpG1y5wxk8drtv3ETAHutCu6N3thkOOgueWg==
+  dependencies:
+    micromark-util-character "^1.0.0"
+    micromark-util-sanitize-uri "^1.0.0"
+    micromark-util-symbol "^1.0.0"
+    micromark-util-types "^1.0.0"
+
+micromark-extension-gfm-footnote@^1.0.0:
+  version "1.1.2"
+  resolved "https://registry.npmmirror.com/micromark-extension-gfm-footnote/-/micromark-extension-gfm-footnote-1.1.2.tgz#05e13034d68f95ca53c99679040bc88a6f92fe2e"
+  integrity sha512-Yxn7z7SxgyGWRNa4wzf8AhYYWNrwl5q1Z8ii+CSTTIqVkmGZF1CElX2JI8g5yGoM3GAman9/PVCUFUSJ0kB/8Q==
+  dependencies:
+    micromark-core-commonmark "^1.0.0"
+    micromark-factory-space "^1.0.0"
+    micromark-util-character "^1.0.0"
+    micromark-util-normalize-identifier "^1.0.0"
+    micromark-util-sanitize-uri "^1.0.0"
+    micromark-util-symbol "^1.0.0"
+    micromark-util-types "^1.0.0"
+    uvu "^0.5.0"
+
+micromark-extension-gfm-strikethrough@^1.0.0:
+  version "1.0.7"
+  resolved "https://registry.npmmirror.com/micromark-extension-gfm-strikethrough/-/micromark-extension-gfm-strikethrough-1.0.7.tgz#c8212c9a616fa3bf47cb5c711da77f4fdc2f80af"
+  integrity sha512-sX0FawVE1o3abGk3vRjOH50L5TTLr3b5XMqnP9YDRb34M0v5OoZhG+OHFz1OffZ9dlwgpTBKaT4XW/AsUVnSDw==
+  dependencies:
+    micromark-util-chunked "^1.0.0"
+    micromark-util-classify-character "^1.0.0"
+    micromark-util-resolve-all "^1.0.0"
+    micromark-util-symbol "^1.0.0"
+    micromark-util-types "^1.0.0"
+    uvu "^0.5.0"
+
+micromark-extension-gfm-table@^1.0.0:
+  version "1.0.7"
+  resolved "https://registry.npmmirror.com/micromark-extension-gfm-table/-/micromark-extension-gfm-table-1.0.7.tgz#dcb46074b0c6254c3fc9cc1f6f5002c162968008"
+  integrity sha512-3ZORTHtcSnMQEKtAOsBQ9/oHp9096pI/UvdPtN7ehKvrmZZ2+bbWhi0ln+I9drmwXMt5boocn6OlwQzNXeVeqw==
+  dependencies:
+    micromark-factory-space "^1.0.0"
+    micromark-util-character "^1.0.0"
+    micromark-util-symbol "^1.0.0"
+    micromark-util-types "^1.0.0"
+    uvu "^0.5.0"
+
+micromark-extension-gfm-tagfilter@^1.0.0:
+  version "1.0.2"
+  resolved "https://registry.npmmirror.com/micromark-extension-gfm-tagfilter/-/micromark-extension-gfm-tagfilter-1.0.2.tgz#aa7c4dd92dabbcb80f313ebaaa8eb3dac05f13a7"
+  integrity sha512-5XWB9GbAUSHTn8VPU8/1DBXMuKYT5uOgEjJb8gN3mW0PNW5OPHpSdojoqf+iq1xo7vWzw/P8bAHY0n6ijpXF7g==
+  dependencies:
+    micromark-util-types "^1.0.0"
+
+micromark-extension-gfm-task-list-item@^1.0.0:
+  version "1.0.5"
+  resolved "https://registry.npmmirror.com/micromark-extension-gfm-task-list-item/-/micromark-extension-gfm-task-list-item-1.0.5.tgz#b52ce498dc4c69b6a9975abafc18f275b9dde9f4"
+  integrity sha512-RMFXl2uQ0pNQy6Lun2YBYT9g9INXtWJULgbt01D/x8/6yJ2qpKyzdZD3pi6UIkzF++Da49xAelVKUeUMqd5eIQ==
+  dependencies:
+    micromark-factory-space "^1.0.0"
+    micromark-util-character "^1.0.0"
+    micromark-util-symbol "^1.0.0"
+    micromark-util-types "^1.0.0"
+    uvu "^0.5.0"
+
+micromark-extension-gfm@^2.0.0:
+  version "2.0.3"
+  resolved "https://registry.npmmirror.com/micromark-extension-gfm/-/micromark-extension-gfm-2.0.3.tgz#e517e8579949a5024a493e49204e884aa74f5acf"
+  integrity sha512-vb9OoHqrhCmbRidQv/2+Bc6pkP0FrtlhurxZofvOEy5o8RtuuvTq+RQ1Vw5ZDNrVraQZu3HixESqbG+0iKk/MQ==
+  dependencies:
+    micromark-extension-gfm-autolink-literal "^1.0.0"
+    micromark-extension-gfm-footnote "^1.0.0"
+    micromark-extension-gfm-strikethrough "^1.0.0"
+    micromark-extension-gfm-table "^1.0.0"
+    micromark-extension-gfm-tagfilter "^1.0.0"
+    micromark-extension-gfm-task-list-item "^1.0.0"
+    micromark-util-combine-extensions "^1.0.0"
+    micromark-util-types "^1.0.0"
 
 micromark-factory-destination@^1.0.0:
   version "1.1.0"
@@ -3042,6 +3211,16 @@ regexp.prototype.flags@^1.4.3, regexp.prototype.flags@^1.5.0:
     define-properties "^1.2.0"
     functions-have-names "^1.2.3"
 
+remark-gfm@^3.0.0:
+  version "3.0.1"
+  resolved "https://registry.npmmirror.com/remark-gfm/-/remark-gfm-3.0.1.tgz#0b180f095e3036545e9dddac0e8df3fa5cfee54f"
+  integrity sha512-lEFDoi2PICJyNrACFOfDD3JlLkuSbOa5Wd8EPt06HUdptv8Gn0bxYTdbU/XXQ3swAPkEaGxxPN9cbnMHvVu1Ig==
+  dependencies:
+    "@types/mdast" "^3.0.0"
+    mdast-util-gfm "^2.0.0"
+    micromark-extension-gfm "^2.0.0"
+    unified "^10.0.0"
+
 remark-inline-links@^6.0.0:
   version "6.0.1"
   resolved "https://registry.npmmirror.com/remark-inline-links/-/remark-inline-links-6.0.1.tgz#83ef8d4fc91aff04c8c8fa209104a8cac07c8724"
@@ -3592,6 +3771,13 @@ unist-util-is@^5.0.0:
   dependencies:
     "@types/unist" "^2.0.0"
 
+unist-util-is@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.npmmirror.com/unist-util-is/-/unist-util-is-6.0.0.tgz#b775956486aff107a9ded971d996c173374be424"
+  integrity sha512-2qCTHimwdxLfz+YzdGfkqNlH0tLi9xjTnHddPmJwtIG9MGsdbutfTc4P+haPD7l7Cjxf/WZj+we5qfVPvvxfYw==
+  dependencies:
+    "@types/unist" "^3.0.0"
+
 unist-util-stringify-position@^3.0.0:
   version "3.0.3"
   resolved "https://registry.npmmirror.com/unist-util-stringify-position/-/unist-util-stringify-position-3.0.3.tgz#03ad3348210c2d930772d64b489580c13a7db39d"
@@ -3599,13 +3785,21 @@ unist-util-stringify-position@^3.0.0:
   dependencies:
     "@types/unist" "^2.0.0"
 
-unist-util-visit-parents@^5.1.1:
+unist-util-visit-parents@^5.0.0, unist-util-visit-parents@^5.1.1:
   version "5.1.3"
   resolved "https://registry.npmmirror.com/unist-util-visit-parents/-/unist-util-visit-parents-5.1.3.tgz#b4520811b0ca34285633785045df7a8d6776cfeb"
   integrity sha512-x6+y8g7wWMyQhL1iZfhIPhDAs7Xwbn9nRosDXl7qoPTSCy0yNxnKc+hWokFifWQIDGi154rdUqKvbCa4+1kLhg==
   dependencies:
     "@types/unist" "^2.0.0"
     unist-util-is "^5.0.0"
+
+unist-util-visit-parents@^6.0.0:
+  version "6.0.1"
+  resolved "https://registry.npmmirror.com/unist-util-visit-parents/-/unist-util-visit-parents-6.0.1.tgz#4d5f85755c3b8f0dc69e21eca5d6d82d22162815"
+  integrity sha512-L/PqWzfTP9lzzEa6CKs0k2nARxTdZduw3zyh8d2NVBnsyvHjSX4TWse388YrrQKbvI8w20fGjGlhgT96WwKykw==
+  dependencies:
+    "@types/unist" "^3.0.0"
+    unist-util-is "^6.0.0"
 
 unist-util-visit@^4.0.0:
   version "4.1.2"
@@ -3615,6 +3809,15 @@ unist-util-visit@^4.0.0:
     "@types/unist" "^2.0.0"
     unist-util-is "^5.0.0"
     unist-util-visit-parents "^5.1.1"
+
+unist-util-visit@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.npmmirror.com/unist-util-visit/-/unist-util-visit-5.0.0.tgz#a7de1f31f72ffd3519ea71814cccf5fd6a9217d6"
+  integrity sha512-MR04uvD+07cwl/yhVuVWAtw+3GOR/knlL55Nd/wAdblk27GCVt3lqpTivy/tkJcZoNPzTwS1Y+KMojlLDhoTzg==
+  dependencies:
+    "@types/unist" "^3.0.0"
+    unist-util-is "^6.0.0"
+    unist-util-visit-parents "^6.0.0"
 
 untildify@^4.0.0:
   version "4.0.0"

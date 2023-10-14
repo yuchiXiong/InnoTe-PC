@@ -3,6 +3,7 @@ import { listener, listenerCtx } from '@milkdown/plugin-listener';
 import { Milkdown, MilkdownProvider, useEditor } from '@milkdown/react'
 import { commonmark } from '@milkdown/preset-commonmark';
 import { prism, prismConfig } from '@milkdown/plugin-prism';
+import { gfm } from '@milkdown/preset-gfm';
 import { nord } from '@milkdown/theme-nord';
 import '@milkdown/theme-nord/style.css';
 import 'prism-themes/themes/prism-nord.css'
@@ -122,10 +123,11 @@ const MilkdownEditor = ({ file }: { file: TEditorFile }) => {
       .config(nord)
       .use(commonmark)
       .use(prism)
+      .use(gfm)
       .use(listener)
   }, [content, file])
 
-  return <Milkdown/>
+  return <Milkdown />
 }
 
 
@@ -150,7 +152,7 @@ const InnoTeEditor = (props: IDirectoryProps) => {
     <div className='box-border flex flex-col w-full h-screen overflow-auto'>
       <div className='flex-1 h-full overflow-y-scroll border-t bg-slate-50'>
         <MilkdownProvider>
-          <MilkdownEditor file={file}/>
+          <MilkdownEditor file={file} />
         </MilkdownProvider>
       </div>
     </div>
