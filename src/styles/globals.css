@@ -29,6 +29,14 @@
     @apply outline-none;
 }
 
+.editor > .tableWrapper {
+    padding: 1rem;
+}
+
+.milkdown-theme-nord.prose > .tableWrapper > table {
+    @apply !m-0;
+}
+
 /** react split pane */
 .Resizer {
     background: #000;
