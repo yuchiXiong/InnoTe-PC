@@ -4,9 +4,13 @@ import { Milkdown, MilkdownProvider, useEditor } from '@milkdown/react'
 import { commonmark } from '@milkdown/preset-commonmark';
 import { prism, prismConfig } from '@milkdown/plugin-prism';
 import { gfm } from '@milkdown/preset-gfm';
+import { clipboard } from '@milkdown/plugin-clipboard';
+import { math } from '@milkdown/plugin-math';
 import { nord } from '@milkdown/theme-nord';
+import { history } from '@milkdown/plugin-history';
 import '@milkdown/theme-nord/style.css';
 import 'prism-themes/themes/prism-nord.css'
+import 'katex/dist/katex.min.css';
 import React, { useEffect, useState } from "react";
 import { getFileContent, writeFile } from "@/actions/file";
 import { IDirectory } from "@/services/directory";
@@ -123,7 +127,10 @@ const MilkdownEditor = ({ file }: { file: TEditorFile }) => {
       .config(nord)
       .use(commonmark)
       .use(prism)
+      .use(math)
       .use(gfm)
+      .use(history)
+      .use(clipboard)
       .use(listener)
   }, [content, file])
 
