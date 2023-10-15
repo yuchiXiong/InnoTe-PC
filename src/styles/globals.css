@@ -18,7 +18,9 @@
 
 .milkdown {
     @apply px-2 py-4;
-    height: 100%;
+    min-height: 100%;
+    height: max-content;
+    padding-bottom: 72px;
 }
 
 .editor {
