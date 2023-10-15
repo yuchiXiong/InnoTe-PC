@@ -21,12 +21,12 @@ const Preview = (props: IDirectoryProps) => {
       case 'webp':
       case 'jpeg':
         return (<div className='box-border flex items-center justify-center w-full h-full p-8 overflow-auto'>
-          <img className='max-h-full shadow-2xl' src={src} alt={filePath}/>
+          <img className='max-h-full rounded shadow-2xl' src={src} alt={filePath} />
         </div>);
       case 'md':
-        return (<InnoTeEditor filePath={filePath}/>)
+        return (<InnoTeEditor filePath={filePath} />)
       default:
-        return (<div className='h-full flex justify-center items-center text-gray-400'>暂不支持预览该格式文件</div>);
+        return (<div className='flex items-center justify-center h-full text-gray-400'>暂不支持预览该格式文件</div>);
     }
   }, [filePath]);
 }
