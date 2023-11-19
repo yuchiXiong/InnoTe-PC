@@ -30,7 +30,14 @@
       },
       "shell": {
         "all": false,
-        "open": ".*"
+        "open": ".*",
+        "sidecar": true,
+        "scope": [
+          {
+            "name": "binaries/demo",
+            "sidecar": true
+          }
+        ]
       }
     },
     "bundle": {
@@ -40,7 +47,9 @@
       "deb": {
         "depends": []
       },
-      "externalBin": [],
+      "externalBin": [
+        "binaries/demo"
+      ],
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
@@ -67,7 +76,15 @@
       }
     },
     "security": {
-      "csp": "default-src 'self'; img-src 'self' asset: https:;"
+      "csp": "default-src 'self'; img-src 'self' asset: https:;",
+      "dangerousRemoteDomainIpcAccess": [
+        {
+          "domain": "localhost",
+          "windows": [
+            "main"
+          ]
+        }
+      ]
     },
     "updater": {
       "active": false

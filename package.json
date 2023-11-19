@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "package": "pkg --config pkg.conf.json worker/app.js --output src-tauri/binaries/demo && node scripts/move-binary.cjs"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.17",
@@ -47,6 +48,8 @@
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1.4.0",
-    "@types/lodash": "^4.14.197"
+    "@types/lodash": "^4.14.197",
+    "execa": "^5.1.1",
+    "pkg": "^5.8.1"
   }
 }
