@@ -81,7 +81,7 @@ const MilkdownEditor = ({ file }: { file: TEditorFile }) => {
           nodeViews: {
             image: (node, view, getPos) => {
               const dom: HTMLDivElement = document.createElement('div');
-              dom.className = 'max-w-full mx-auto mt-4 w-max';
+              dom.className = 'w-10/12 mx-auto mt-4';
 
               const img: HTMLImageElement = document.createElement('img');
               img.alt = node.attrs.alt;
@@ -96,16 +96,21 @@ const MilkdownEditor = ({ file }: { file: TEditorFile }) => {
               dom.appendChild(img);
               // 等待图片加载完成后，把alt属性放到图片下方
               img.onload = () => {
+                console.log('onloaded', getPos(), node.attrs.alt)
                 const id = `IMG_${getPos()}_TITLE`;
                 let title = dom.querySelector(id);
                 if (title) return;
 
-                title = document.createElement('small');
-                title.id = id;
-                title.innerHTML = node.attrs.alt;
-                title.className = 'block pt-1 mt-4 text-center text-gray-500 border-t border-gray-200 text-md';
 
-                dom.appendChild(title);
+                if (node.attrs.alt) {
+                  title = document.createElement('small');
+                  title.id = id;
+                  title.innerHTML = node.attrs.alt;
+                  title.className = 'block pt-1 mt-4 text-center text-gray-500 border-t border-gray-200 text-md';
+
+                  dom.appendChild(title);
+                }
+
               }
 
 

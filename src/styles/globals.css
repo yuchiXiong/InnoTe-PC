@@ -6,6 +6,15 @@
     --foreground-rgb: 0, 0, 0;
     --background-start-rgb: 214, 219, 220;
     --background-end-rgb: 255, 255, 255;
+    font-family:
+        "SourceHanSerifCN-Bold",
+        PingFang SC,
+        -apple-system,
+        SF UI Text,
+        Lucida Grande,
+        STheiti,
+        Microsoft YaHei,
+        sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -17,14 +26,14 @@
 }
 
 .milkdown {
-    @apply px-2 py-4;
+    @apply px-8 py-4;
     min-height: 100%;
     height: max-content;
     padding-bottom: 72px;
 }
 
 .editor {
-    @apply mx-auto;
+    @apply w-full max-w-full mx-auto;
 }
 
 .editor:focus-visible {
@@ -33,6 +42,16 @@
 
 .editor > .tableWrapper {
     padding: 1rem;
+}
+
+.editor > h1 {
+    @apply mb-0;
+    &::after {
+        content: "";
+        display: block;
+        border-bottom: 1px solid #f0f0f0;
+        margin: 16px 0;
+    }
 }
 
 .milkdown-theme-nord.prose > .tableWrapper > table {
