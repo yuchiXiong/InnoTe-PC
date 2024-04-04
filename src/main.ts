@@ -1,44 +1,77 @@
-// Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron')
-const path = require('node:path')
+import { app, BrowserWindow, ipcMain, dialog } from "electron";
+import * as path from "node:path";
+import * as fs from "node:fs";
 
-const createWindow = () => {
-  // Create the browser window.
-  const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    // webPreferences: {
-    //   preload: path.join(__dirname, 'preload.js')
-    // }
-  })
-
-  // 加载 index.html
-  // mainWindow.loadFile('index.html')
-  mainWindow.loadURL('http://localhost:3000')
-
-  // 打开开发工具
-  // mainWindow.webContents.openDevTools()
+async function handleOpenDirectory() {
+  const { canceled, filePaths } = await dialog.showOpenDialog({
+    properties: ["openDirectory"],
+  });
+  if (!canceled) {
+    return filePaths[0];
+  }
 }
 
-// 这段程序将会在 Electron 结束初始化
-// 和创建浏览器窗口的时候调用
-// 部分 API 在 ready 事件触发后才能使用。
+const getFileList = async (path: string): Promise<string[]> => {
+  const exist = fs.existsSync(path);
+  if (!exist) {
+    return [];
+  }
+  const files = fs.readdirSync(path);
+  return files;
+};
+
+const getFileContent = async (path: string): Promise<string> => {
+  const exist = fs.existsSync(path);
+  if (!exist) {
+    return "";
+  }
+  const content = fs.readFileSync(path, "utf-8");
+  return content;
+};
+
+const createWindow = () => {
+  const mainWindow = new BrowserWindow({
+    width: 1600,
+    height: 1200,
+    center: true,
+    frame: false,
+    webPreferences: {
+      preload: path.join(__dirname, "preload.js"),
+      nodeIntegration: true,
+    },
+  });
+
+  mainWindow.loadURL("http://localhost:3000");
+};
+
 app.whenReady().then(() => {
-  createWindow()
+  ipcMain.handle("dialog:openDirectory", handleOpenDirectory);
+  ipcMain.handle("getFileList", (e, path: string) => getFileList(path));
+  ipcMain.handle("getFileContent", (e, path: string) => getFileContent(path));
+  ipcMain.handle("app:minimize", () => {
+    BrowserWindow.getFocusedWindow()?.minimize();
+  });
+  ipcMain.handle("app:maximize", () => {
+    BrowserWindow.getFocusedWindow()?.maximize();
+  });
+  ipcMain.handle("app:unmaximize", () => {
+    BrowserWindow.getFocusedWindow()?.unmaximize();
+  });
+  ipcMain.handle("app:isMaximized", () => {
+    BrowserWindow.getFocusedWindow()?.isMaximized();
+  });
+  ipcMain.handle("app:close", () => {
+    BrowserWindow.getFocusedWindow()?.close();
+  });
 
-  app.on('activate', () => {
-    // 在 macOS 系统内, 如果没有已开启的应用窗口
-    // 点击托盘图标时通常会重新创建一个新窗口
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
-  })
-})
+  createWindow();
 
-// 除了 macOS 外，当所有窗口都被关闭的时候退出程序。 因此, 通常
-// 对应用程序和它们的菜单栏来说应该时刻保持激活状态, 
-// 直到用户使用 Cmd + Q 明确退出
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit()
-})
+  app.on("activate", () => {
+    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+  });
+});
 
-// 在当前文件中你可以引入所有的主进程代码
-// 也可以拆分成几个文件，然后用 require 导入。
+app.on("window-all-closed", () => {
+  console.log("window-all-closed");
+  if (process.platform !== "darwin") app.quit();
+});

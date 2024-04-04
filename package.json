@@ -4,9 +4,10 @@
   "private": true,
   "main": "src/main.js",
   "scripts": {
-    "dev": "tsc src/main.ts && electron ."
+    "dev": "tsc src/main.ts src/preload.ts && electron ."
   },
   "dependencies": {
+    "@types/electron": "^1.6.10",
     "@types/node": "20.4.2",
     "autoprefixer": "10.4.14",
     "core-js": "^3.32.0",
