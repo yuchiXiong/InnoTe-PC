@@ -12,20 +12,24 @@ async function handleOpenDirectory() {
 }
 
 const getFileList = async (path: string): Promise<string[]> => {
-  const exist = fs.existsSync(path);
+  const _path = decodeURIComponent(path);
+  const exist = fs.existsSync(_path);
+  console.log(_path, exist)
   if (!exist) {
     return [];
   }
-  const files = fs.readdirSync(path);
+  const files = fs.readdirSync(_path);
   return files;
 };
 
 const getFileContent = async (path: string): Promise<string> => {
-  const exist = fs.existsSync(path);
+  const _path = decodeURIComponent(path);
+
+  const exist = fs.existsSync(_path);
   if (!exist) {
     return "";
   }
-  const content = fs.readFileSync(path, "utf-8");
+  const content = fs.readFileSync(_path, "utf-8");
   return content;
 };
 
