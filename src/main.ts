@@ -14,7 +14,7 @@ async function handleOpenDirectory() {
 const getFileList = async (path: string): Promise<string[]> => {
   const _path = decodeURIComponent(path);
   const exist = fs.existsSync(_path);
-  console.log(_path, exist)
+  console.log(_path, exist);
   if (!exist) {
     return [];
   }
@@ -45,7 +45,8 @@ const createWindow = () => {
     },
   });
 
-  mainWindow.loadURL("http://localhost:3000");
+  // mainWindow.loadURL("http://localhost:3000");
+  mainWindow.loadURL("https://innote-editor.bubuyu.top");
 };
 
 app.whenReady().then(() => {

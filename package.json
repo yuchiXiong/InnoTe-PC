@@ -1,21 +1,38 @@
 {
   "name": "InnoTe",
-  "version": "0.1.1",
+  "version": "0.1.4",
   "private": true,
+  "author": {
+    "name": "yuchiXiong",
+    "email": "yuchi.xiong@foxmail.com"
+  },
+  "description": "InnoTe is a desktop application for Markdown, which supports markdown preview, export to PDF, export to HTML, and more.",
   "main": "src/main.js",
   "scripts": {
-    "dev": "tsc src/main.ts src/preload.ts && electron ."
+    "dev": "tsc src/main.ts src/preload.ts && electron .",
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "dependencies": {
     "@types/electron": "^1.6.10",
     "@types/node": "20.4.2",
     "autoprefixer": "10.4.14",
     "core-js": "^3.32.0",
+    "electron-squirrel-startup": "^1.0.0",
     "eslint": "8.45.0",
     "lodash": "^4.17.21",
     "typescript": "5.1.6"
   },
   "devDependencies": {
+    "@electron-forge/cli": "^7.3.1",
+    "@electron-forge/maker-deb": "^7.3.1",
+    "@electron-forge/maker-rpm": "^7.3.1",
+    "@electron-forge/maker-squirrel": "^7.3.1",
+    "@electron-forge/maker-zip": "^7.3.1",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.3.1",
+    "@electron-forge/plugin-fuses": "^7.3.1",
+    "@electron/fuses": "^1.8.0",
     "@types/lodash": "^4.14.197",
     "electron": "^29.1.6"
   }
