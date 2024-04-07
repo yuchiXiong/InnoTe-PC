@@ -16,13 +16,9 @@ module.exports = {
       platforms: ['darwin'],
     },
     {
-      name: '@electron-forge/maker-deb',
+      name: '@electron-forge/maker-dmg',
       config: {},
-    },
-    {
-      name: '@electron-forge/maker-rpm',
-      config: {},
-    },
+    }
   ],
   plugins: [
     {
