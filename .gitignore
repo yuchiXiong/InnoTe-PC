@@ -38,4 +38,4 @@ next-env.d.ts
 .idea
 .vscode
 
-src/*.js
+src/**/*.js

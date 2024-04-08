@@ -12,54 +12,57 @@ async function handleOpenDirectory() {
 }
 
 const getFileList = async (path: string): Promise<string[]> => {
-  const _path = decodeURIComponent(path);
-  const exist = fs.existsSync(_path);
-  console.log(_path, exist);
+  const exist = fs.existsSync(path);
+  console.log(path, exist);
   if (!exist) {
     return [];
   }
-  const files = fs.readdirSync(_path);
+  const files = fs.readdirSync(path);
   return files;
 };
 
 const getFileContent = async (path: string): Promise<string> => {
-  const _path = decodeURIComponent(path);
 
-  const exist = fs.existsSync(_path);
+  const exist = fs.existsSync(path);
   if (!exist) {
     return "";
   }
-  const content = fs.readFileSync(_path, "utf-8");
+  const content = fs.readFileSync(path, "utf-8");
   return content;
 };
+
+const saveFileContent = async (path: string, content: string): Promise<void> => {
+  fs.writeFileSync(path, content, "utf-8");
+}
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: 1600,
     height: 1200,
     center: true,
-    frame: false,
+    // frame: false,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: true,
     },
   });
 
-  // mainWindow.loadURL("http://localhost:3000");
-  mainWindow.loadURL("https://innote-editor.bubuyu.top");
+  mainWindow.loadURL("http://localhost:3000");
+  // mainWindow.loadURL("https://innote-editor.bubuyu.top");
 };
 
 app.whenReady().then(() => {
   ipcMain.handle("dialog:openDirectory", handleOpenDirectory);
   ipcMain.handle("getFileList", (e, path: string) => getFileList(path));
   ipcMain.handle("getFileContent", (e, path: string) => getFileContent(path));
+  ipcMain.handle("saveFileContent", (e, path: string, content: string) => saveFileContent(path, content));
   ipcMain.handle("app:minimize", () => {
     BrowserWindow.getFocusedWindow()?.minimize();
   });
   ipcMain.handle("app:maximize", () => {
     BrowserWindow.getFocusedWindow()?.maximize();
   });
-  ipcMain.handle("app:unmaximize", () => {
+  ipcMain.handle("app:unMaximize", () => {
     BrowserWindow.getFocusedWindow()?.unmaximize();
   });
   ipcMain.handle("app:isMaximized", () => {
