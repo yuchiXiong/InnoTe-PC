@@ -70,13 +70,19 @@ const createWindow = () => {
     width: 1600,
     height: 1200,
     center: true,
-    // frame: false,
+    frame: false,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: true,
     },
   });
 
+  mainWindow.on('unmaximize', () => {
+    mainWindow.webContents.send('app:onUnMaximized');
+  });
+  mainWindow.on("maximize", () => {
+    mainWindow.webContents.send('app:onMaximized');
+  });
   mainWindow.loadURL("http://localhost:3000");
   // mainWindow.loadURL("https://innote-editor.bubuyu.top");
 };
