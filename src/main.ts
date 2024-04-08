@@ -3,6 +3,7 @@ import * as path from "node:path";
 import * as fs from "node:fs";
 
 async function handleOpenDirectory() {
+  console.log("[DEBUG] handleOpenDirectory");
   const { canceled, filePaths } = await dialog.showOpenDialog({
     properties: ["openDirectory"],
   });
@@ -24,6 +25,8 @@ const getFileList = async (
     }[];
   }[]
 > => {
+  console.log("[DEBUG] getFileList", dirPath);
+
   const exist = fs.existsSync(dirPath);
   if (!exist) {
     return [];
@@ -49,6 +52,7 @@ const getFileList = async (
 };
 
 const getFileContent = async (path: string): Promise<string> => {
+  console.log("[DEBUG] getFileContent", path);
   const exist = fs.existsSync(path);
   if (!exist) {
     return "";
@@ -61,6 +65,7 @@ const saveFileContent = async (
   path: string,
   content: string
 ): Promise<void> => {
+  console.log("[DEBUG] getFileList", path);
   fs.writeFileSync(path, content, "utf-8");
 };
 
@@ -107,24 +112,31 @@ app.whenReady().then(() => {
     saveFileContent(path, content)
   );
   ipcMain.handle("app:minimize", () => {
+    console.log("[DEBUG]", "app:minimize")
     BrowserWindow.getFocusedWindow()?.minimize();
   });
   ipcMain.handle("app:maximize", () => {
+    console.log("[DEBUG]", "app:maximize")
     BrowserWindow.getFocusedWindow()?.maximize();
   });
   ipcMain.handle("app:unMaximize", () => {
+    console.log("[DEBUG]", "app:unMaximize")
     BrowserWindow.getFocusedWindow()?.unmaximize();
   });
   ipcMain.handle("app:isMaximized", () => {
+    console.log("[DEBUG]", "app:isMaximized")
     return BrowserWindow.getFocusedWindow()?.isMaximized();
   });
   ipcMain.handle("app:isFullScreen", () => {
+    console.log("[DEBUG]", "app:isFullScreen")
     return BrowserWindow.getFocusedWindow()?.isFullScreen();
   });
   ipcMain.handle("app:isSimpleFullScreen", () => {
+    console.log("[DEBUG]", "app:isSimpleFullScreen")
     return BrowserWindow.getFocusedWindow()?.isSimpleFullScreen();
   });
   ipcMain.handle("app:close", () => {
+    console.log("[DEBUG]", "app:close")
     BrowserWindow.getFocusedWindow()?.close();
   });
 
