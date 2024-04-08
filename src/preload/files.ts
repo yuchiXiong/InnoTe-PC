@@ -5,7 +5,10 @@ export const openDirectory = () => {
   return ipcRenderer.invoke("dialog:openDirectory");
 };
 
-export const getFileList = (path: string) => {
+export const getFileList = (path: string): Promise<{
+  fileName: string;
+  isDirectory: boolean;
+}[]> => {
   return ipcRenderer.invoke("getFileList", path);
 };
 
