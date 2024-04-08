@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, dialog } from "electron";
+import { app, BrowserWindow, ipcMain, dialog, screen } from "electron";
 import * as path from "node:path";
 import * as fs from "node:fs";
 
@@ -25,7 +25,6 @@ const getFileList = async (
   }[]
 > => {
   const exist = fs.existsSync(dirPath);
-  console.log(path, exist);
   if (!exist) {
     return [];
   }
@@ -66,9 +65,14 @@ const saveFileContent = async (
 };
 
 const createWindow = () => {
+  const primaryDisplay = screen.getPrimaryDisplay();
+  const { width, height } = primaryDisplay.workAreaSize;
+  console.log(width, height)
   const mainWindow = new BrowserWindow({
-    width: 1600,
-    height: 1200,
+    width: Math.min(1600, width * 0.9),
+    height: Math.min(1200, height * 0.9),
+    // width: 800,
+    // height: 600,
     center: true,
     frame: false,
     webPreferences: {
@@ -77,11 +81,19 @@ const createWindow = () => {
     },
   });
 
-  mainWindow.on('unmaximize', () => {
-    mainWindow.webContents.send('app:onUnMaximized');
+  mainWindow.on("unmaximize", () => {
+    mainWindow.webContents.send("app:onUnMaximized");
   });
   mainWindow.on("maximize", () => {
-    mainWindow.webContents.send('app:onMaximized');
+    mainWindow.webContents.send("app:onMaximized");
+  });
+  mainWindow.on("enter-full-screen", () => {
+    console.log("enter-full-screen");
+    mainWindow.webContents.send("app:onEnterFullScreen");
+  });
+  mainWindow.on("leave-full-screen", () => {
+    console.log("leave-full-screen");
+    mainWindow.webContents.send("app:onLeaveFullScreen");
   });
   mainWindow.loadURL("http://localhost:3000");
   // mainWindow.loadURL("https://innote-editor.bubuyu.top");
@@ -104,7 +116,13 @@ app.whenReady().then(() => {
     BrowserWindow.getFocusedWindow()?.unmaximize();
   });
   ipcMain.handle("app:isMaximized", () => {
-    BrowserWindow.getFocusedWindow()?.isMaximized();
+    return BrowserWindow.getFocusedWindow()?.isMaximized();
+  });
+  ipcMain.handle("app:isFullScreen", () => {
+    return BrowserWindow.getFocusedWindow()?.isFullScreen();
+  });
+  ipcMain.handle("app:isSimpleFullScreen", () => {
+    return BrowserWindow.getFocusedWindow()?.isSimpleFullScreen();
   });
   ipcMain.handle("app:close", () => {
     BrowserWindow.getFocusedWindow()?.close();
