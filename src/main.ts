@@ -11,18 +11,45 @@ async function handleOpenDirectory() {
   }
 }
 
-const getFileList = async (path: string): Promise<string[]> => {
-  const exist = fs.existsSync(path);
+const getFileList = async (
+  dirPath: string
+): Promise<
+  {
+    fileName: string;
+    isDirectory: boolean;
+    children: {
+      fileName: string;
+      isDirectory: boolean;
+      children: [];
+    }[];
+  }[]
+> => {
+  const exist = fs.existsSync(dirPath);
   console.log(path, exist);
   if (!exist) {
     return [];
   }
-  const files = fs.readdirSync(path);
-  return files;
+  const files = fs.readdirSync(dirPath, {
+    withFileTypes: true,
+  });
+  return files.map((file) => ({
+    fileName: file.name,
+    isDirectory: file.isDirectory(),
+    children: file.isDirectory()
+      ? fs
+          .readdirSync(path.join(dirPath, file.name), {
+            withFileTypes: true,
+          })
+          .map((file) => ({
+            fileName: file.name,
+            isDirectory: file.isDirectory(),
+            children: [],
+          }))
+      : [],
+  }));
 };
 
 const getFileContent = async (path: string): Promise<string> => {
-
   const exist = fs.existsSync(path);
   if (!exist) {
     return "";
@@ -31,9 +58,12 @@ const getFileContent = async (path: string): Promise<string> => {
   return content;
 };
 
-const saveFileContent = async (path: string, content: string): Promise<void> => {
+const saveFileContent = async (
+  path: string,
+  content: string
+): Promise<void> => {
   fs.writeFileSync(path, content, "utf-8");
-}
+};
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
@@ -55,7 +85,9 @@ app.whenReady().then(() => {
   ipcMain.handle("dialog:openDirectory", handleOpenDirectory);
   ipcMain.handle("getFileList", (e, path: string) => getFileList(path));
   ipcMain.handle("getFileContent", (e, path: string) => getFileContent(path));
-  ipcMain.handle("saveFileContent", (e, path: string, content: string) => saveFileContent(path, content));
+  ipcMain.handle("saveFileContent", (e, path: string, content: string) =>
+    saveFileContent(path, content)
+  );
   ipcMain.handle("app:minimize", () => {
     BrowserWindow.getFocusedWindow()?.minimize();
   });
