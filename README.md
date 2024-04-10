@@ -2,7 +2,7 @@
   <!-- <h1>InnoTe</h1> -->
   <img src="./public/innote-logo.png" />
   <hr />
-  <h3>基于 Tauri/Next 的 Markdown 管理工具。</h3>
+  <h3>基于 Electron/Next 的 Markdown 管理工具。</h3>
 
   <figure>
     <img src="./example.png" alt="InnoTe Logo" />
