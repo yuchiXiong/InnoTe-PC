@@ -1,4 +1,12 @@
-import { app, BrowserWindow, ipcMain, dialog, screen } from "electron";
+import {
+  app,
+  BrowserWindow,
+  ipcMain,
+  dialog,
+  screen,
+  protocol,
+  net,
+} from "electron";
 import * as path from "node:path";
 import * as fs from "node:fs";
 
@@ -72,7 +80,7 @@ const saveFileContent = async (
 const createWindow = () => {
   const primaryDisplay = screen.getPrimaryDisplay();
   const { width, height } = primaryDisplay.workAreaSize;
-  console.log(width, height)
+  console.log(width, height);
   const mainWindow = new BrowserWindow({
     width: width * 0.8,
     height: height * 0.8,
@@ -102,6 +110,19 @@ const createWindow = () => {
   // mainWindow.loadURL("https://innote-editor.bubuyu.top");
 };
 
+protocol.registerSchemesAsPrivileged([
+  {
+    scheme: 'atom',
+    privileges: {
+      secure: true,
+      standard: true,
+      supportFetchAPI: true, // Add this if you want to use fetch with this protocol.
+      // stream: true, // Add this if you intend to use the protocol for streaming i.e. in video/audio html tags.
+      // corsEnabled: true, // Add this if you need to enable cors for this protocol.
+    },
+  },
+]);
+
 app.whenReady().then(() => {
   ipcMain.handle("dialog:openDirectory", handleOpenDirectory);
   ipcMain.handle("getFileList", (e, path: string) => getFileList(path));
@@ -109,33 +130,43 @@ app.whenReady().then(() => {
   ipcMain.handle("saveFileContent", (e, path: string, content: string) =>
     saveFileContent(path, content)
   );
+  // ipcMain.handle("getPathForFile", (e, path: string) => {
+  //   webUtils.getPathForFile(path);
+  // });
+
   ipcMain.handle("app:minimize", () => {
-    console.log("[DEBUG]", "app:minimize")
+    console.log("[DEBUG]", "app:minimize");
     BrowserWindow.getFocusedWindow()?.minimize();
   });
   ipcMain.handle("app:maximize", () => {
-    console.log("[DEBUG]", "app:maximize")
+    console.log("[DEBUG]", "app:maximize");
     BrowserWindow.getFocusedWindow()?.maximize();
   });
   ipcMain.handle("app:unMaximize", () => {
-    console.log("[DEBUG]", "app:unMaximize")
+    console.log("[DEBUG]", "app:unMaximize");
     BrowserWindow.getFocusedWindow()?.unmaximize();
   });
   ipcMain.handle("app:isMaximized", () => {
-    console.log("[DEBUG]", "app:isMaximized")
+    console.log("[DEBUG]", "app:isMaximized");
     return BrowserWindow.getFocusedWindow()?.isMaximized();
   });
   ipcMain.handle("app:isFullScreen", () => {
-    console.log("[DEBUG]", "app:isFullScreen")
+    console.log("[DEBUG]", "app:isFullScreen");
     return BrowserWindow.getFocusedWindow()?.isFullScreen();
   });
   ipcMain.handle("app:isSimpleFullScreen", () => {
-    console.log("[DEBUG]", "app:isSimpleFullScreen")
+    console.log("[DEBUG]", "app:isSimpleFullScreen");
     return BrowserWindow.getFocusedWindow()?.isSimpleFullScreen();
   });
   ipcMain.handle("app:close", () => {
-    console.log("[DEBUG]", "app:close")
+    console.log("[DEBUG]", "app:close");
     BrowserWindow.getFocusedWindow()?.close();
+  });
+  protocol.handle("atom", (request) => {
+    
+    const url = request.url.replace("atom://", "");
+    const filePath = decodeURIComponent(url.replace("innote/?filepath=", ""));
+    return net.fetch("file://" + filePath);
   });
 
   createWindow();
