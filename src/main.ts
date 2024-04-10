@@ -74,10 +74,8 @@ const createWindow = () => {
   const { width, height } = primaryDisplay.workAreaSize;
   console.log(width, height)
   const mainWindow = new BrowserWindow({
-    width: Math.min(1600, width * 0.9),
-    height: Math.min(1200, height * 0.9),
-    // width: 800,
-    // height: 600,
+    width: width * 0.8,
+    height: height * 0.8,
     center: true,
     frame: false,
     webPreferences: {
