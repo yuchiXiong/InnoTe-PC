@@ -5,7 +5,7 @@
   <h3>基于 Electron/Next 的 Markdown 管理工具。</h3>
 
   <figure>
-    <img src="./example.png" alt="InnoTe Logo" />
+    <img src="./example-v1.png" alt="InnoTe Logo" />
     <figcaption>
       <!-- <p align="center">自由的 Markdown 管理工具。</p> -->
     </figcaption>
