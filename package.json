@@ -10,9 +10,9 @@
   "main": "src/main.js",
   "scripts": {
     "dev": "tsc src/main.ts src/preload.ts && electron .",
-    "start": "tsc src/main.ts && electron-forge start",
-    "package": "tsc src/main.ts && electron-forge package",
-    "make": "tsc src/main.ts && electron-forge make"
+    "start": "tsc src/main.ts src/preload.ts && electron-forge start",
+    "package": "tsc src/main.ts src/preload.ts && electron-forge package",
+    "make": "tsc src/main.ts src/preload.ts && electron-forge make"
   },
   "dependencies": {
     "@types/electron": "^1.6.10",

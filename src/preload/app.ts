@@ -14,3 +14,5 @@ export const onLeaveFullScreen = (callback: () => {}) => ipcRenderer.on("app:onL
 export const isMaximized = () => ipcRenderer.invoke("app:isMaximized");
 export const isFullScreen = () => ipcRenderer.invoke("app:isFullScreen");
 export const isSimpleFullScreen = () => ipcRenderer.invoke("app:isSimpleFullScreen");
+
+export const openExternalLink = (url: string) => ipcRenderer.invoke("app:openExternalLink", url);

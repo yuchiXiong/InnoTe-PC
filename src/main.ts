@@ -6,9 +6,12 @@ import {
   screen,
   protocol,
   net,
+  shell,
 } from "electron";
 import * as path from "node:path";
 import * as fs from "node:fs";
+
+if (require("electron-squirrel-startup")) app.quit();
 
 async function handleOpenDirectory() {
   console.log("[DEBUG] handleOpenDirectory");
@@ -106,19 +109,25 @@ const createWindow = () => {
     console.log("leave-full-screen");
     mainWindow.webContents.send("app:onLeaveFullScreen");
   });
+
+  // 不允许打开新窗口，当前只有 target="_blank" 才会打开新窗口，将这一类行为拦截，使用默认浏览器打开
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    console.log("[DEBUG] setWindowOpenHandler", url);
+    shell.openExternal(url);
+    return { action: "deny" };
+  });
+
   mainWindow.loadURL("http://localhost:3000");
   // mainWindow.loadURL("https://innote-editor.bubuyu.top");
 };
 
 protocol.registerSchemesAsPrivileged([
   {
-    scheme: 'atom',
+    scheme: "atom",
     privileges: {
       secure: true,
       standard: true,
-      supportFetchAPI: true, // Add this if you want to use fetch with this protocol.
-      // stream: true, // Add this if you intend to use the protocol for streaming i.e. in video/audio html tags.
-      // corsEnabled: true, // Add this if you need to enable cors for this protocol.
+      supportFetchAPI: true,
     },
   },
 ]);
@@ -162,8 +171,13 @@ app.whenReady().then(() => {
     console.log("[DEBUG]", "app:close");
     BrowserWindow.getFocusedWindow()?.close();
   });
+  ipcMain.handle("app:openExternalLink", (event, url: string) => {
+    console.log("[DEBUG]", "app:openExternalLink");
+    shell.openExternal(url);
+  });
   protocol.handle("atom", (request) => {
-    
+    console.log("[DEBUG]", "atom", request.url);
+
     const url = request.url.replace("atom://", "");
     const filePath = decodeURIComponent(url.replace("innote/?filepath=", ""));
     return net.fetch("file://" + filePath);
