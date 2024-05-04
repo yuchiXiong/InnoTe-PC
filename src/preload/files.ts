@@ -25,3 +25,7 @@ export const pathJoin = (paths: string[]) => {
 
   return fullPath;
 }
+
+export const saveImageFromClipboard = (path: string, image: Blob) => {
+  return ipcRenderer.invoke("saveImageFromClipboard", path, image);
+}

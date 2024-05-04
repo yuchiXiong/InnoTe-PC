@@ -7,6 +7,7 @@ import {
   protocol,
   net,
   shell,
+  clipboard,
 } from "electron";
 import * as path from "node:path";
 import * as fs from "node:fs";
@@ -139,6 +140,31 @@ app.whenReady().then(() => {
   ipcMain.handle("saveFileContent", (e, path: string, content: string) =>
     saveFileContent(path, content)
   );
+  ipcMain.handle("saveImageFromClipboard", async (e, imagePath: string) => {
+    console.log("[DEBUG] saveImageFromClipboard", imagePath);
+
+    const fullDirectory = path.join(imagePath, "image");
+
+    const fullImagePath = path.join(
+      fullDirectory,
+      `${new Date().getTime()}.png`
+    );
+
+    if (!fs.existsSync(fullDirectory)) {
+      fs.mkdirSync(fullDirectory, { recursive: true });
+    }
+
+    const nativeImage = clipboard.readImage();
+    if (!nativeImage) {
+      return "";
+    }
+
+    const imageBuffer = nativeImage.toPNG();
+    fs.writeFileSync(fullImagePath, imageBuffer);
+
+    // 返回图片的相对路径
+    return path.relative(imagePath, fullImagePath);
+  });
   // ipcMain.handle("getPathForFile", (e, path: string) => {
   //   webUtils.getPathForFile(path);
   // });
@@ -180,7 +206,18 @@ app.whenReady().then(() => {
 
     const url = request.url.replace("atom://", "");
     const filePath = decodeURIComponent(url.replace("innote/?filepath=", ""));
-    return net.fetch("file://" + filePath);
+    if (filePath.includes("&")) {
+      const [relativePath, currentPath] = filePath
+        .split("&")
+        .map((i) => i.replace("path=", ""));
+
+      const fullPath = path.join(currentPath, relativePath);
+      console.log("[DEBUG]", "atom", fullPath);
+      return net.fetch("file://" + fullPath);
+    } else {
+      console.log("[DEBUG]", "atom", filePath);
+      return net.fetch("file://" + filePath);
+    }
   });
 
   createWindow();
